@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import FileUploadComponent from './components/FileUploadComponent';
 import MostListenedToSongsComponent from './components/MostListenedSongsComponent';
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
+import ListeningClockFullAnalysisComponent from './components/ListeningClockFullAnalysisComponent';
 
 const IndexPage = () => {
     const [fileContent, setFileContent] = useState<string>('');
@@ -19,9 +20,12 @@ const IndexPage = () => {
             title: 'Artists Ranking',
             component: <MostListenedArtistsComponent fileContent={fileContent} />,
         },
+        {
+            title: 'Listening Clock',
+            component: <ListeningClockFullAnalysisComponent fileContent={fileContent} />,
+        }
     ];
 
-    // NEED BUTTONS TO SELECT WHICH SECTION TO DISPLAY
     return (
         <div>
             <div className="px-4 py-5">
