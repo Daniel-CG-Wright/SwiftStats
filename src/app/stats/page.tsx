@@ -12,11 +12,11 @@ const IndexPage = () => {
     // can display. The user clicks on the corresponding button.
     const sections = [
         {
-            title: 'Most Listened To Songs',
+            title: 'Songs Ranking',
             component: <MostListenedToSongsComponent fileContent={fileContent} />,
         },
         {
-            title: 'Most Listened To Artists',
+            title: 'Artists Ranking',
             component: <MostListenedArtistsComponent fileContent={fileContent} />,
         },
     ];
@@ -24,13 +24,37 @@ const IndexPage = () => {
     // NEED BUTTONS TO SELECT WHICH SECTION TO DISPLAY
     return (
         <div>
-            <h1>Upload File</h1>
-            <FileUploadComponent
-            fileContent={fileContent}
-            setFileContent={setFileContent}
-            />
-            {fileContent && sections[selectedSection].component}
+            <div className="px-4 py-5">
+                <h1>Upload File</h1>
+                <FileUploadComponent
+                fileContent={fileContent}
+                setFileContent={setFileContent}
+                />
+            </div>
+            <div className="px-4 py-4">
+                {fileContent && (
+                    <div>
+                        <h1>File Analysis</h1>
+                        <div className="py-2 flex-row" style={{ overflowX: 'auto' }}>
+                            <div className="flex">
+                                {sections.map((section, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedSection(index)}
+                                        className={index === selectedSection ? '' : 'option-button'}
+                                        style={{ marginRight: '8px' }}
+                                    >
+                                        {section.title}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="py-2">{sections[selectedSection].component}</div>
+                    </div>
+                )}
+            </div>
         </div>
+        
     );
 };
 

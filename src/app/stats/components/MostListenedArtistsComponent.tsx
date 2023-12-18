@@ -1,9 +1,6 @@
 import React from 'react';
-
-interface Artist {
-    name: string;
-    minutesListened: number;
-}
+import { Artist } from '@/types';
+import { timeFormat } from '@/util/dateTimeFormat';
 
 const getMostListenedArtists = (fileContent: string): Artist[] => {
     const data = JSON.parse(fileContent);
@@ -29,7 +26,7 @@ const MostListenedArtistsComponent: React.FC<{ fileContent: string }> = ({ fileC
                 <tr>
                     <th>#</th>
                     <th>Artist</th>
-                    <th>Minutes Listened</th>
+                    <th>Time Listened</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,7 +34,7 @@ const MostListenedArtistsComponent: React.FC<{ fileContent: string }> = ({ fileC
                     <tr key={index}>
                         <td>{index + 1}</td>
                         <td>{artist.name}</td>
-                        <td>{artist.minutesListened.toFixed(2)}</td>
+                        <td>{timeFormat(artist.minutesListened)} ({artist.minutesListened.toFixed(1)} minutes)</td>
                     </tr>
                 ))}
             </tbody>

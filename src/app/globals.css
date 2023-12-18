@@ -26,38 +26,109 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+div {
+  background-color: #121212 ;
+}
+
+label {
+  color: #fff;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  color: #fff;
+}
+
 /* Spotify-like table styles */
-.table-sleek {
+table {
   width: 100%;
-  background-color: #191414;
+  background-color: #121212;
   color: #fff;
   border-collapse: collapse;
 }
 
-.table-sleek thead {
+table thead {
   font-weight: bold;
 }
 
-.table-sleek td,
-.table-sleek th {
+table td,
+table th {
   padding: 12px;
-  border-bottom: 1px solid #181414;
+  border-bottom: 1px solid #121212;
 }
 
-.table-sleek tr:last-child td {
+table tr:last-child td {
   border-bottom: none;
 }
 
-.table-sleek tr:hover {
+table tr:hover {
   background-color: #302c2c;
 }
 
 /* You may want to add your own font-family based on Spotify's style */
-.table-sleek {
+table {
   font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
 }
 
 /* Optional: Right-aligned elements, like duration */
 .right-aligned {
   text-align: right;
+}
+
+button, .file-input-label {
+  padding: 5px 10px;
+  background-color: #1db954;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover, .file-input-label {
+  background-color: #1ed760; /* Slightly lighter green on hover */
+}
+
+button:active, .file-input-label {
+  transform: scale(0.98); /* Slightly shrink when clicked */
+}
+
+/* Remove default button styles */
+button:focus, .file-input-label {
+  outline: none;
+}
+
+.file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.option-button {
+  padding: 5px 10px;
+  background-color: #232323;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hide {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.show {
+  transform: translateY(0);
+  transition: transform 0.3s ease-in-out;
 }

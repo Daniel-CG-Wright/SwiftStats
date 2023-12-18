@@ -1,16 +1,13 @@
 "use client"
 import React from 'react'
+import { Song } from '@/types';
+import { timeFormat } from '@/util/dateTimeFormat';
 
 interface MostListenedToSongsComponentProps {
     fileContent: string;
 }
 
-interface Song {
-    name: string;
-    artist: string;
-    minutesListened: number;
-    timesStreamed: number;
-}
+
 
 /**
  * This function takes in the file JSON content and returns a list of songs listened
@@ -60,13 +57,13 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
     const songsListenedTo = getSongsListenedTo(fileContent);
 
     return (
-        <table className="table-sleek">
+        <table>
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Artist</th>
                     <th>Song</th>
-                    <th>Minutes Listened</th>
+                    <th>Time Listened</th>
                     <th>Times Streamed</th>
                 </tr>
             </thead>
@@ -76,7 +73,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                         <td>{index + 1}</td>
                         <td>{song.artist}</td>
                         <td>{song.name}</td>
-                        <td>{song.minutesListened}</td>
+                        <td>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
                         <td>{song.timesStreamed}</td>
                     </tr>
                 ))}
