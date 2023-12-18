@@ -25,3 +25,39 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* Spotify-like table styles */
+.table-sleek {
+  width: 100%;
+  background-color: #191414;
+  color: #fff;
+  border-collapse: collapse;
+}
+
+.table-sleek thead {
+  font-weight: bold;
+}
+
+.table-sleek td,
+.table-sleek th {
+  padding: 12px;
+  border-bottom: 1px solid #181414;
+}
+
+.table-sleek tr:last-child td {
+  border-bottom: none;
+}
+
+.table-sleek tr:hover {
+  background-color: #302c2c;
+}
+
+/* You may want to add your own font-family based on Spotify's style */
+.table-sleek {
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}
+
+/* Optional: Right-aligned elements, like duration */
+.right-aligned {
+  text-align: right;
+}

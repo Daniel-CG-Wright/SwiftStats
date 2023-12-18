@@ -1,10 +1,15 @@
 // components/FileUploadComponent.tsx
 
 import React, { useState, useEffect, ChangeEvent } from 'react';
+import FileAnalysisSection from './FileAnalysisSection';
 
-const FileUploadComponent: React.FC = () => {
-    const [fileContent, setFileContent] = useState<string>('');
-    const [saveLocally, setSaveLocally] = useState<boolean>(false);
+interface Props {
+    fileContent: string;
+    setFileContent: (fileContent: string) => void;
+}
+
+const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) => {
+    const [isSaved, setIsSaved] = useState(false);
 
     useEffect(() => {
         const savedFileContent = localStorage.getItem('uploadedFile');
@@ -21,31 +26,28 @@ const FileUploadComponent: React.FC = () => {
                 if (e.target?.result) {
                     const content = e.target.result as string;
                     setFileContent(content);
-                    if (saveLocally) {
-                        localStorage.setItem('uploadedFile', content);
-                    }
+                    setIsSaved(false);
                 }
             };
             reader.readAsText(file);
         }
     };
 
-    const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setSaveLocally(event.target.checked);
+    const handleSaveClick = () => {
+        if (fileContent) {
+            localStorage.setItem('uploadedFile', fileContent);
+            setIsSaved(true);
+        }
     };
 
     return (
         <div>
-            <input type="file" onChange={handleFileChange} />
-            <label>
-                <input 
-                    type="checkbox" 
-                    checked={saveLocally}
-                    onChange={handleCheckboxChange}
-                />
-                Save file for next time
-            </label>
-            {/* Render file content or processing results here */}
+            <input type="file" onChange={handleFileChange}/>
+            {fileContent && !isSaved && (
+                <button onClick={handleSaveClick}>Save for next time</button>
+            )}
+            {isSaved && <span>Saved</span>}
+            <button onClick={() => setFileContent('')}>Clear</button>
         </div>
     );
 };
