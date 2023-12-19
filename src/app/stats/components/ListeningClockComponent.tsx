@@ -4,8 +4,10 @@ import * as d3 from 'd3';
 import { months } from '@/util/dateTimeFormat';
 
 interface ListeningClockComponentProps {
-  fileContent: string;
-  selectedArtist: string;
+    fileContent: string;
+    selectedArtist: string;
+    startDate: string;
+    endDate: string;
 }
 
 interface ListeningTimeByMonth {
@@ -21,18 +23,31 @@ interface ListeningTimeByMonth {
  * month: string,
  * value: number}
  */
-const getListeningTimeByMonth = (fileContent: string, selectedArtist: string) => {
+// ListeningClockComponent.tsx
+
+const getListeningTimeByMonth = (fileContent: string, selectedArtist: string, startDate: string, endDate: string): ListeningTimeByMonth[] => {
     const data = JSON.parse(fileContent);
-    
+
     const listeningTimeByMonth = new Map<string, number>();
+
+    // Convert startDate and endDate to milliseconds for comparison
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+
     data.forEach((record: { artistName: string; endTime: string; msPlayed: number }) => {
-        const key = record.endTime.split('-')[1];
-        if (record.artistName === selectedArtist) {
-        const currentListeningTime = listeningTimeByMonth.get(key) || 0;
-        listeningTimeByMonth.set(key, currentListeningTime + record.msPlayed);
+        // Convert record's endTime to milliseconds for comparison
+        const recordTime = new Date(record.endTime).getTime();
+
+        // Only process records within the date range
+        if (recordTime >= start && recordTime <= end) {
+            const key = record.endTime.split('-')[1];
+            if (record.artistName === selectedArtist) {
+                const currentListeningTime = listeningTimeByMonth.get(key) || 0;
+                listeningTimeByMonth.set(key, currentListeningTime + record.msPlayed);
+            }
         }
     });
-    
+
     const listeningTimeByMonthArray = Array.from(listeningTimeByMonth).map(([key, value]) => ({
         month: key,
         value: Number((value / 60000).toFixed(1)),
@@ -44,16 +59,16 @@ const getListeningTimeByMonth = (fileContent: string, selectedArtist: string) =>
             listeningTimeByMonthArray.push({ month: i.toString(), value: 0 });
         }
     }
-    
+
     return listeningTimeByMonthArray.sort((a, b) => Number(a.month) - Number(b.month));
 };
 
 
 
-const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ fileContent, selectedArtist }) => {
+const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ fileContent, selectedArtist, startDate, endDate }) => {
   const ref = useRef(null);
     
-  const data = getListeningTimeByMonth(fileContent, selectedArtist);
+  const data = getListeningTimeByMonth(fileContent, selectedArtist, startDate, endDate);
 
   useEffect(() => {
     if (data.length === 0) return;

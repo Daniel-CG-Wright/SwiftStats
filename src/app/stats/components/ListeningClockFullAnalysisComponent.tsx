@@ -4,6 +4,8 @@ import { getMostListenedArtists } from '@/util/analysisHelpers';
 
 interface ListeningClockFullAnalysisComponentProps {
     fileContent: string;
+    startDate: string;
+    endDate: string;
 }
 
 /**
@@ -11,7 +13,7 @@ interface ListeningClockFullAnalysisComponentProps {
  * @param fileContent the JSON content of the file
  * @returns the listening clock component and an artist selection button conveyor belt
  */
-const ListeningClockFullAnalysisComponent: React.FC<ListeningClockFullAnalysisComponentProps> = ({ fileContent }) => {
+const ListeningClockFullAnalysisComponent: React.FC<ListeningClockFullAnalysisComponentProps> = ({ fileContent, startDate, endDate }) => {
     const [selectedArtist, setSelectedArtist] = useState<string>('');
 
     return (
@@ -20,7 +22,7 @@ const ListeningClockFullAnalysisComponent: React.FC<ListeningClockFullAnalysisCo
                 <h1>Listening Clock</h1>
                 <div className="py-2 flex-row" style={{ overflowX: 'auto' }}>
                     <div className="flex">
-                        {getMostListenedArtists(fileContent).map((artist, index) => (
+                        {getMostListenedArtists(fileContent, startDate, endDate).map((artist, index) => (
                             <button
                                 key={index}
                                 onClick={() => setSelectedArtist(artist.name)}
@@ -32,7 +34,7 @@ const ListeningClockFullAnalysisComponent: React.FC<ListeningClockFullAnalysisCo
                         ))}
                     </div>
                 </div>
-                <ListeningClockComponent fileContent={fileContent} selectedArtist={selectedArtist} />
+                <ListeningClockComponent fileContent={fileContent} selectedArtist={selectedArtist} startDate={startDate} endDate={endDate} />
             </div>
         </div>
     );

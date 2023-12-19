@@ -1,6 +1,7 @@
 export interface Artist {
     name: string;
     minutesListened: number;
+    timesStreamed: number;
 }
 
 export interface Song {

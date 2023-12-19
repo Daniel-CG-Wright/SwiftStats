@@ -24,13 +24,15 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  overflow: auto;
+  height: 100vh;
 }
 
 div {
   background-color: #121212 ;
 }
 
-label {
+label, span {
   color: #fff;
 }
 
@@ -130,3 +132,14 @@ button:focus, .file-input-label {
   transform: translateY(0);
   transition: transform 0.3s ease-in-out;
 }
+
+.date-picker {
+  background-color: #232323;
+  color: white;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}
+

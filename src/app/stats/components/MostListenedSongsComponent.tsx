@@ -5,6 +5,8 @@ import { timeFormat } from '@/util/dateTimeFormat';
 
 interface MostListenedToSongsComponentProps {
     fileContent: string;
+    startDate: string;
+    endDate: string;
 }
 
 
@@ -13,28 +15,36 @@ interface MostListenedToSongsComponentProps {
  * This function takes in the file JSON content and returns a list of songs listened
  * to in order of most listened to by ms listened. This is using the Spotify ListenignData JSOn file
  * @param fileContent the JSON content of the file
+ * @param startDate the start date of the filter
+ * @param endDate the end date of the filter
  * @returns a list of songs listened to in order of most listened to by ms listened
  * (see the Song interface for more details)
  */
-const getSongsListenedTo = (fileContent: string): Song[] => {
-    // this character is used to separate artist and track name when using their combination
-    // as a key in the map
+const getSongsListenedTo = (fileContent: string, startDate: string, endDate: string): Song[] => {
     const artistTrackSeparator = '¬sep¬';
-    // Parse the JSON content
     const data = JSON.parse(fileContent);
 
-    // Aggregate the total msPlayed for each song
     const playtimeMap = new Map<string, number>();
     const streamCountMap = new Map<string, number>();
-    data.forEach((record: { artistName: string; trackName: string; msPlayed: number;}) => {
-        const key = `${record.artistName}${artistTrackSeparator}${record.trackName}`;
-        const currentPlaytime = playtimeMap.get(key) || 0;
-        const currentStreamCount = streamCountMap.get(key) || 0;
-        playtimeMap.set(key, currentPlaytime + record.msPlayed);
-        streamCountMap.set(key, currentStreamCount + 1);
+
+    // Convert startDate and endDate to milliseconds for comparison
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+
+    data.forEach((record: { artistName: string; trackName: string; msPlayed: number; endTime: string; }) => {
+        // Convert record's endTime to milliseconds for comparison
+        const recordTime = new Date(record.endTime).getTime();
+
+        // Only process records within the date range
+        if (recordTime >= start && recordTime <= end) {
+            const key = `${record.artistName}${artistTrackSeparator}${record.trackName}`;
+            const currentPlaytime = playtimeMap.get(key) || 0;
+            const currentStreamCount = streamCountMap.get(key) || 0;
+            playtimeMap.set(key, currentPlaytime + record.msPlayed);
+            streamCountMap.set(key, currentStreamCount + 1);
+        }
     });
 
-    // Filter and sort the songs
     const songsListenedTo = Array.from(playtimeMap)
         .map(([key, msPlayed]) => ({
             artist: key.split(artistTrackSeparator)[0],
@@ -46,39 +56,44 @@ const getSongsListenedTo = (fileContent: string): Song[] => {
         .sort((a, b) => b.minutesListened - a.minutesListened);
 
     return songsListenedTo;
-}
+};
 
 /**
  * This component takes in the file JSON content and displays a list of songs listened
  * to in order of most listened to by ms listened.
  * @param fileContent the JSON content of the file
+ * @param startDate the start date of the filter
+ * @param endDate the end date of the filter
  */
-const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileContent }) => {
-    const songsListenedTo = getSongsListenedTo(fileContent);
+const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileContent, startDate, endDate }) => {
+    const songsListenedTo = getSongsListenedTo(fileContent, startDate, endDate);
 
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Artist</th>
-                    <th>Song</th>
-                    <th>Time Listened</th>
-                    <th>Times Streamed</th>
-                </tr>
-            </thead>
-            <tbody>
-                {songsListenedTo.map((song, index) => (
-                    <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{song.artist}</td>
-                        <td>{song.name}</td>
-                        <td>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
-                        <td>{song.timesStreamed}</td>
+        <div>
+            <label>Use Ctrl + F to search</label>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Artist</th>
+                        <th>Song</th>
+                        <th>Time Listened</th>
+                        <th>Times Streamed</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {songsListenedTo.map((song, index) => (
+                        <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{song.artist}</td>
+                            <td>{song.name}</td>
+                            <td>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
+                            <td>{song.timesStreamed}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
 }
     
