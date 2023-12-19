@@ -27,16 +27,12 @@ const getSongsListenedTo = (fileContent: string, startDate: string, endDate: str
     const playtimeMap = new Map<string, number>();
     const streamCountMap = new Map<string, number>();
 
-    // Convert startDate and endDate to milliseconds for comparison
-    const start = new Date(startDate).getTime();
-    const end = new Date(endDate).getTime();
-
     data.forEach((record: { artistName: string; trackName: string; msPlayed: number; endTime: string; }) => {
-        // Convert record's endTime to milliseconds for comparison
-        const recordTime = new Date(record.endTime).getTime();
+        // Convert recordTime to YYYY-MM-DD format
+        const recordTime = record.endTime.split(' ')[0];
 
         // Only process records within the date range
-        if (recordTime >= start && recordTime <= end) {
+        if (recordTime >= startDate && recordTime <= endDate) {
             const key = `${record.artistName}${artistTrackSeparator}${record.trackName}`;
             const currentPlaytime = playtimeMap.get(key) || 0;
             const currentStreamCount = streamCountMap.get(key) || 0;

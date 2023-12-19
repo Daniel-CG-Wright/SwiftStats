@@ -17,8 +17,8 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileConte
 
     // Filter the data based on the selected start and end time
     const filteredData = data.filter(record => 
-        (!startDate || record.endTime >= startDate) && 
-        (!endDate || record.endTime <= endDate)
+        (!startDate || record.endTime.split(' ')[0] >= startDate) && 
+        (!endDate || record.endTime.split(' ')[0] <= endDate)
     );
 
     // Calculate the statistics

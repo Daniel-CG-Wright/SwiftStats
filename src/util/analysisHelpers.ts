@@ -11,16 +11,14 @@ export const getMostListenedArtists = (fileContent: string, startDate: string, e
     const playtimeMap = new Map<string, number>();
     const timesStreamedMap = new Map<string, number>();
 
-    // Convert startDate and endDate to milliseconds for comparison
-    const start = new Date(startDate).getTime();
-    const end = new Date(endDate).getTime();
+    // startDate and endDate are in the format YYYY-MM-DD
 
     data.forEach((record: { artistName: string; msPlayed: number, endTime: number }) => {
-        // Convert record's endTime to milliseconds for comparison
-        const recordTime = new Date(record.endTime).getTime();
+        // Compare the record's end time to the start and end dates (after converting the record's end time to YYYY-MM-DD)
+        const recordTime = new Date(record.endTime).toISOString().split('T')[0];
 
         // Only process records within the date range
-        if (recordTime >= start && recordTime <= end) {
+        if (recordTime >= startDate && recordTime <= endDate) {
             const currentPlaytime = playtimeMap.get(record.artistName) || 0;
             playtimeMap.set(record.artistName, currentPlaytime + record.msPlayed);
             const currentTimesStreamed = timesStreamedMap.get(record.artistName) || 0;

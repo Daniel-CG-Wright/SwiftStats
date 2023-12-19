@@ -30,16 +30,12 @@ const getListeningTimeByMonth = (fileContent: string, selectedArtist: string, st
 
     const listeningTimeByMonth = new Map<string, number>();
 
-    // Convert startDate and endDate to milliseconds for comparison
-    const start = new Date(startDate).getTime();
-    const end = new Date(endDate).getTime();
-
     data.forEach((record: { artistName: string; endTime: string; msPlayed: number }) => {
-        // Convert record's endTime to milliseconds for comparison
-        const recordTime = new Date(record.endTime).getTime();
+        // Convert record's endTime to YYYY-MM-DD format
+        const recordTime = record.endTime.split(' ')[0];
 
         // Only process records within the date range
-        if (recordTime >= start && recordTime <= end) {
+        if (recordTime >= startDate && recordTime <= endDate) {
             const key = record.endTime.split('-')[1];
             if (record.artistName === selectedArtist) {
                 const currentListeningTime = listeningTimeByMonth.get(key) || 0;
