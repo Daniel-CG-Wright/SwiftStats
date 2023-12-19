@@ -81,12 +81,11 @@ button, .file-input-label {
   padding: 5px 10px;
   background-color: #1db954;
   color: white;
-  font-weight: bold;
   border: none;
   border-radius: 500px; /* Gives a pill-like shape */
-  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
 }
 
 button:hover, .file-input-label {
@@ -115,12 +114,11 @@ button:focus, .file-input-label {
   padding: 5px 10px;
   background-color: #232323;
   color: white;
-  font-weight: bold;
   border: none;
   border-radius: 500px; /* Gives a pill-like shape */
-  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
 }
 
 .hide {

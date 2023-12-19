@@ -27,7 +27,7 @@ const IndexPage = () => {
     ];
 
     return (
-        <div>
+        <div className='bg-dark flex-col h-full w-full top-0 left-0'>
             <div className="px-4 py-5">
                 <h1>Upload File</h1>
                 <FileUploadComponent
@@ -35,7 +35,7 @@ const IndexPage = () => {
                 setFileContent={setFileContent}
                 />
             </div>
-            <div className="px-4 py-4">
+            <div className="py-4 bg-dark">
                 {fileContent && (
                     <div>
                         <h1>File Analysis</h1>

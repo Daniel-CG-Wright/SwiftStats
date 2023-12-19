@@ -1,5 +1,10 @@
 // Exports a function to output a date or a datetime in a readable format
 
+export const months = [
+  "January", "February", "March", "April", "May", "June", "July", "August",
+  "September", "October", "November", "December",
+];
+
 /**
  * This function takes a datetime in the format YYYY-MM-DD HH:MM and returns
  * a string in the format "Month Day, Year at HH:MM"

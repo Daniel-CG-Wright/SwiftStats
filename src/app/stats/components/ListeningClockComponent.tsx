@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { months } from '@/util/dateTimeFormat';
 
 interface ListeningClockComponentProps {
   fileContent: string;
@@ -36,8 +37,15 @@ const getListeningTimeByMonth = (fileContent: string, selectedArtist: string) =>
         month: key,
         value: Number((value / 60000).toFixed(1)),
     }));
+
+    // for months with no listening time, add 0
+    for (let i = 1; i <= 12; i++) {
+        if (!listeningTimeByMonthArray.some((record: ListeningTimeByMonth) => record.month === i.toString())) {
+            listeningTimeByMonthArray.push({ month: i.toString(), value: 0 });
+        }
+    }
     
-    return listeningTimeByMonthArray;
+    return listeningTimeByMonthArray.sort((a, b) => Number(a.month) - Number(b.month));
 };
 
 
@@ -46,13 +54,7 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ fileC
   const ref = useRef(null);
     
   const data = getListeningTimeByMonth(fileContent, selectedArtist);
-  // for months with no listening time, we add a 0 value
-  for (let i = 1; i <= 12; i++) {
-      const month = i < 10 ? `0${i}` : `${i}`;
-      if (!data.find((d) => d.month === month)) {
-          data.push({ month, value: 0 });
-      }
-  }
+
   useEffect(() => {
     if (data.length === 0) return;
     // Remove previous chart
@@ -84,12 +86,36 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ fileC
         .attr('transform', `translate(${width / 2}, ${height / 2})`)
         .attr('data-tip', d => `Listening Time: ${d.value} minutes`)
 
+        // Add labels
+        const labelRadius = radius * 0.4; // Adjust this to place labels inside or outside the bars
+        svg.append('g')
+        .selectAll('text')
+        .data(data)
+        .enter()
+        .append('text')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('transform', d => {
+            const angle = xScale(d.month) + xScale.bandwidth() / 2;
+            const rotateAngle = (angle * 180 / Math.PI) - 90; // Convert to degrees and offset
+            const xPosition = Math.cos(angle - Math.PI / 2) * labelRadius;
+            const yPosition = Math.sin(angle - Math.PI / 2) * labelRadius;
+            return `translate(${width / 2 + xPosition}, ${height / 2 + yPosition}) rotate(${rotateAngle})`;
+        })
+        .attr('dy', '0.35em')
+        .attr('text-anchor', "start")
+        .text(d => months[parseInt(d.month) - 1])
+        .attr('fill', 'white');
+
+
+
   }, [data]);
 
   return (
-    <div>
-        <svg ref={ref} width={300} height={300} />
+    <div className="bg-dark flex justify-center h-full w-full flex-grow">
+        <svg ref={ref} width={500} height={500} />
     </div>
+
   );
 };
 
