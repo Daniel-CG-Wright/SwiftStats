@@ -143,3 +143,12 @@ button:focus, .file-input-label {
   font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
 }
 
+select {
+  background-color: #232323;
+  color: white;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}

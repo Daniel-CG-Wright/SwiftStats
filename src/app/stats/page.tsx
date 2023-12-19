@@ -33,20 +33,34 @@ const IndexPage = () => {
         {
             title: 'Profile Stats',
             component: <ProfileStatsComponent fileContent={fileContent} startDate={startDate} endDate={endDate} />,
+            hideDateSelect: false,
         },
         {
             title: 'Songs Ranking',
             component: <MostListenedToSongsComponent fileContent={fileContent} startDate={startDate} endDate={endDate} />,
+            hideDateSelect: false,
         },
         {
             title: 'Artists Ranking',
             component: <MostListenedArtistsComponent fileContent={fileContent} startDate={startDate} endDate={endDate} />,
+            hideDateSelect: false,
         },
         {
-            title: 'Listening Clock',
-            component: <ListeningClockFullAnalysisComponent fileContent={fileContent} startDate={startDate} endDate={endDate} />,
-        }
+            title: 'Artist Listening Clock',
+            component: <ListeningClockFullAnalysisComponent fileContent={fileContent} firstDate={firstDate} lastDate={firstDate} />,
+            hideDateSelect: true,
+        },
+
     ];
+
+    // other section ideas:
+    /*
+    Listening clock for indivdual songs (click on a song and see the listening clock for that song)
+    Other stats for indivdual songs (click on a song and see the stats for that song)
+    Comparison section (compare 2 time periods such as 2020 vs 2021)
+    Top songs for each month (could be on the listening clock)
+    */
+    
 
     return (
         <div className='bg-dark flex-col h-full w-full top-0 left-0'>
@@ -75,11 +89,13 @@ const IndexPage = () => {
                                 ))}
                             </div>
                         </div>
+                        {!sections[selectedSection].hideDateSelect &&
                         <DateSelectComponent
                         startDate={startDate} setStartDate={setStartDate}
                         endDate={endDate} setEndDate={setEndDate}
                         firstDate={firstDate} lastDate={lastDate}
                         />
+                        }
                     
                         <div className="py-2 px-4">{sections[selectedSection].component}</div>
                     </div>

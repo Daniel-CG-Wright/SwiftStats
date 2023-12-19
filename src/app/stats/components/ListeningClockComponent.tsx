@@ -60,7 +60,6 @@ const getListeningTimeByMonth = (fileContent: string, selectedArtist: string, st
 };
 
 
-
 const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ fileContent, selectedArtist, startDate, endDate }) => {
   const ref = useRef(null);
     
