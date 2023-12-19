@@ -17,3 +17,8 @@ export interface JSONSong {
     trackName: string;
     msPlayed: number;
 }
+
+export interface NumberByMonth {
+    month: string;
+    value: number;
+}
