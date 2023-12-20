@@ -151,4 +151,23 @@ select {
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  appearance: none;
+  outline: none;
+
+}
+
+select:hover {
+  background-color: #1ed760; /* Slightly lighter green on hover */
+  cursor: pointer;
+}
+
+select option {
+  background-color: #232323;
+  color: white;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  outline: none;
 }

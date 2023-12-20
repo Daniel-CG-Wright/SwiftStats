@@ -36,6 +36,9 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileConte
                     <tr><td>Total Streams</td><td>{totalStreams}</td></tr>
                     <tr><td>Unique Artists</td><td>{uniqueArtists}</td></tr>
                     <tr><td>Unique Tracks</td><td>{uniqueTracks}</td></tr>
+                    <tr><td>Average Time per Stream</td><td>{timeFormat(totalStreamTime / totalStreams)} ({(totalStreamTime / totalStreams).toFixed(1)} minutes)</td></tr>
+                    <tr><td>Average Streams per Day</td><td>{(totalStreams / (new Date(endDate).getTime() - new Date(startDate).getTime()) * 86400000).toFixed(1)}</td></tr>
+                    <tr><td>Average Listening Time per Day</td><td>{timeFormat(totalStreamTime / (new Date(endDate).getTime() - new Date(startDate).getTime()) * 86400000)} ({((totalStreamTime / (new Date(endDate).getTime() - new Date(startDate).getTime()) * 86400000)).toFixed(1)} minutes)</td></tr>
                 </tbody>
             </table>
         </div>

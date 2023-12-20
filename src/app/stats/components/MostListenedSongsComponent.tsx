@@ -1,7 +1,8 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { Song } from '@/types';
 import { timeFormat } from '@/util/dateTimeFormat';
+import SongDetailsComponent from './SongDetailsComponent';
 
 interface MostListenedToSongsComponentProps {
     fileContent: string;
@@ -63,8 +64,17 @@ const getSongsListenedTo = (fileContent: string, startDate: string, endDate: str
  */
 const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileContent, startDate, endDate }) => {
     const songsListenedTo = getSongsListenedTo(fileContent, startDate, endDate);
+    const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+    if (selectedSong) {
+        return (
+            <div>
+                <SongDetailsComponent song={selectedSong} onBack={() => setSelectedSong(null)} />
+            </div>
+        );
+    }
 
     return (
+        
         <div>
             <label>Use Ctrl + F to search</label>
             <table>
@@ -79,7 +89,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                 </thead>
                 <tbody>
                     {songsListenedTo.map((song, index) => (
-                        <tr key={index}>
+                        <tr key={index} onClick={() => setSelectedSong(song)}>
                             <td>{index + 1}</td>
                             <td>{song.artist}</td>
                             <td>{song.name}</td>

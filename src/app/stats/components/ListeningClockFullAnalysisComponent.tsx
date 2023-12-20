@@ -98,11 +98,11 @@ const ListeningClockFullAnalysisComponent: React.FC<ListeningClockFullAnalysisCo
                         }
                     </div>
                 </div>
-                <div>
+                <div className="">
                     <select
                         value={selectedArtist}
                         onChange={e => setSelectedArtist(e.target.value)}
-                        className="bg-dark text-white"
+                        className=""
                     >
                         <option value="">All artists</option>
                         {getMostListenedArtists(fileContent, startDate, endDate).map(artist => (
