@@ -68,7 +68,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
     if (selectedSong) {
         return (
             <div>
-                <SongDetailsComponent song={selectedSong} onBack={() => setSelectedSong(null)} />
+                <SongDetailsComponent fileContent={fileContent} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate} />
             </div>
         );
     }

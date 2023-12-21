@@ -43,6 +43,13 @@ h1 {
   color: #fff;
 }
 
+h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0;
+  color: #fff;
+}
+
 /* Spotify-like table styles */
 table {
   width: 100%;
@@ -53,6 +60,12 @@ table {
 
 table thead {
   font-weight: bold;
+}
+
+table th:hover {
+  background-color: #302c2c;
+  /* make cursor normal arrow*/
+  cursor: default;
 }
 
 table td,
@@ -67,6 +80,7 @@ table tr:last-child td {
 
 table tr:hover {
   background-color: #302c2c;
+  cursor: pointer;
 }
 
 /* You may want to add your own font-family based on Spotify's style */
