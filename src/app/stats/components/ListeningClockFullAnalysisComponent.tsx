@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ListeningClockComponent from './ListeningClockComponent';
 import { getMostListenedArtists } from '@/util/analysisHelpers';
-import { getArtistListeningTimeByMonth } from '@/util/analysisHelpers';
+import { getListeningTimeByMonth } from '@/util/analysisHelpers';
 import { NumberByMonth } from '@/types';
 
 interface ListeningClockFullAnalysisComponentProps {
@@ -9,16 +9,6 @@ interface ListeningClockFullAnalysisComponentProps {
     firstDate: string;
     lastDate: string;
 }
-
-/**
- * This function gets the listening time for each month of the year for the selected artist
- * @param fileContent the JSON content of the file
- * @param selectedArtist the artist selected by the user. If empty, all artists are selected
- * @returns an array of objects with the month and the total listening time for that month {
- * month: string,
- * value: number}
- */
-// ListeningClockComponent.tsx
 
 /**
  * This contains the listening clock component and an artist selection button conveyor belt, it is used
@@ -36,7 +26,7 @@ const ListeningClockFullAnalysisComponent: React.FC<ListeningClockFullAnalysisCo
     // use a row of buttons to select the year, and a dropdown to select the artist
 
     // get the listening time by month for the selected artist
-    const data = getArtistListeningTimeByMonth(fileContent, selectedArtist, year);
+    const data = getListeningTimeByMonth(fileContent, { artist: selectedArtist, trackName: '' }, year);
 
     return (
         <div>

@@ -45,11 +45,6 @@ const IndexPage = () => {
             component: <MostListenedArtistsComponent fileContent={fileContent} startDate={startDate} endDate={endDate} />,
             hideDateSelect: false,
         },
-        {
-            title: 'Artist Listening Clock',
-            component: <ListeningClockFullAnalysisComponent fileContent={fileContent} firstDate={firstDate} lastDate={firstDate} />,
-            hideDateSelect: true,
-        },
 
     ];
 
