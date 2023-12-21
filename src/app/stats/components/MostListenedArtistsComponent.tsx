@@ -1,12 +1,18 @@
-import React from 'react';
-import { Artist } from '@/types';
+import React, { useState } from 'react';
 import { timeFormat } from '@/util/dateTimeFormat';
+import ArtistDetailsComponent from './ArtistDetailsComponent';
 import { getMostListenedArtists } from '@/util/analysisHelpers';
+import { Artist } from '@/types';
 
 
 const MostListenedArtistsComponent: React.FC<{ fileContent: string, startDate: string, endDate: string }> = ({ fileContent, startDate, endDate }) => {
+    const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
     const artists = getMostListenedArtists(fileContent, startDate, endDate);
 
+    if (selectedArtist) {
+        return <ArtistDetailsComponent fileContent={fileContent} artist={selectedArtist} startDate={startDate} endDate={endDate} onBack={() => setSelectedArtist(null)} />;
+    }
+    
     return (
         <div>
             <label>Use Ctrl + F to search</label>
@@ -21,7 +27,7 @@ const MostListenedArtistsComponent: React.FC<{ fileContent: string, startDate: s
                 </thead>
                 <tbody>
                     {artists.map((artist, index) => (
-                        <tr key={index}>
+                        <tr key={index} onClick={() => setSelectedArtist(artist)}>
                             <td>{index + 1}</td>
                             <td>{artist.name}</td>
                             <td>{timeFormat(artist.minutesListened)} ({artist.minutesListened.toFixed(1)} minutes)</td>
