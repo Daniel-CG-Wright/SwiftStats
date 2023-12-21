@@ -4,13 +4,20 @@ import ArtistDetailsComponent from './ArtistDetailsComponent';
 import { getMostListenedArtists } from '@/util/analysisHelpers';
 import { Artist } from '@/types';
 
+interface MostListenedArtistsComponentProps {
+    fileContent: string;
+    startDate: string;
+    endDate: string;
+    firstDate: string;
+    lastDate: string;
+}
 
-const MostListenedArtistsComponent: React.FC<{ fileContent: string, startDate: string, endDate: string }> = ({ fileContent, startDate, endDate }) => {
+const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> = ({ fileContent, startDate, endDate, firstDate, lastDate }) => {
     const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
     const artists = getMostListenedArtists(fileContent, startDate, endDate);
 
     if (selectedArtist) {
-        return <ArtistDetailsComponent fileContent={fileContent} artist={selectedArtist} startDate={startDate} endDate={endDate} onBack={() => setSelectedArtist(null)} />;
+        return <ArtistDetailsComponent fileContent={fileContent} artist={selectedArtist} startDate={startDate} endDate={endDate} onBack={() => setSelectedArtist(null)} firstDate={firstDate} lastDate={lastDate} />;
     }
     
     return (

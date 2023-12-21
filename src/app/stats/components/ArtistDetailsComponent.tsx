@@ -1,6 +1,6 @@
 import React from 'react';
 import { Artist } from '@/types';
-import ListeningClockComponent from './ListeningClockComponent';
+import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getListeningTimeByMonth, getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 
@@ -9,16 +9,17 @@ interface ArtistDetailsComponentProps {
     artist: Artist;
     startDate: string;
     endDate: string;
+    firstDate: string;
+    lastDate: string;
     onBack: () => void;
 }
 
 /**
  * This component displays details of a specific artist, including the listening clock
  */
-const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileContent, artist, startDate, endDate, onBack }) => {
+const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileContent, artist, startDate, endDate, firstDate, lastDate, onBack }) => {
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { artist: artist.name, trackName: '' }, startDate, endDate);
 
-    const data = getListeningTimeByMonth(fileContent, { artist: artist.name, trackName: '' }, new Date().getFullYear().toString());
     return (
         <div>
             <button onClick={onBack}>Back</button>
@@ -29,7 +30,7 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileCon
                     <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
-            <ListeningClockComponent data={data} year={new Date().getFullYear().toString()} />
+            <ListeningClockWrapperComponent fileContent={fileContent} criteria={{ artist: artist.name, trackName: '' }} firstDate={firstDate} lastDate={lastDate} />
         </div>
     );
 };

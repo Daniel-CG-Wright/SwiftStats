@@ -32,17 +32,20 @@ const IndexPage = () => {
     const sections = [
         {
             title: 'Profile Stats',
-            component: <ProfileStatsComponent fileContent={fileContent} startDate={startDate} endDate={endDate} />,
+            component: <ProfileStatsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
+                firstDate={firstDate} lastDate={lastDate} />,
             hideDateSelect: false,
         },
         {
             title: 'Songs Ranking',
-            component: <MostListenedToSongsComponent fileContent={fileContent} startDate={startDate} endDate={endDate} />,
+            component: <MostListenedToSongsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
+                firstDate={firstDate} lastDate={lastDate} />,
             hideDateSelect: false,
         },
         {
             title: 'Artists Ranking',
-            component: <MostListenedArtistsComponent fileContent={fileContent} startDate={startDate} endDate={endDate} />,
+            component: <MostListenedArtistsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
+                firstDate={firstDate} lastDate={lastDate} />,
             hideDateSelect: false,
         },
 

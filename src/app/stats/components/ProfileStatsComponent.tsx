@@ -4,15 +4,17 @@ import React from 'react';
 import { JSONSong } from '@/types';
 import { getDetailedData, getListeningTimeByMonth } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
-import ListeningClockComponent from './ListeningClockComponent';
+import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 
 interface ProfileStatsComponentProps {
     fileContent: string;
     startDate: string;
     endDate: string;
+    firstDate: string;
+    lastDate: string;
 }
 
-const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileContent, startDate, endDate }) => {
+const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileContent, startDate, endDate, firstDate, lastDate }) => {
 
     // Parse the file content
     const data = JSON.parse(fileContent) as JSONSong[];
@@ -40,7 +42,7 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileConte
                     <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
-            <ListeningClockComponent data={listeningClockData} year={new Date().getFullYear().toString()} />
+            <ListeningClockWrapperComponent fileContent={fileContent} criteria={{ artist: '', trackName: '' }} firstDate={firstDate} lastDate={lastDate} />
         </div>
     );
 }

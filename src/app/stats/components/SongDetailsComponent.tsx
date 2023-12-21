@@ -1,6 +1,6 @@
 import React from 'react';
 import { Song } from '@/types';
-import ListeningClockComponent from './ListeningClockComponent';
+import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getListeningTimeByMonth, getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 
@@ -9,6 +9,8 @@ interface SongDetailsComponentProps {
     song: Song;
     startDate: string;
     endDate: string;
+    firstDate: string;
+    lastDate: string;
     onBack: () => void;
 }
 
@@ -17,7 +19,7 @@ interface SongDetailsComponentProps {
 /**
  * This component displays details of a specific song, including the listening clock
  */
-const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent, song, startDate, endDate, onBack }) => {
+const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent, song, startDate, endDate, firstDate, lastDate, onBack }) => {
     // Render song details and listening clock, listening clock will just use this year for now
     // We want to display the song name, artist, time listened, times streamed, average time listened per stream
     // in the same format as the profile stats page.
@@ -25,7 +27,6 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent
 
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { trackName: song.name, artist: song.artist }, startDate, endDate);
 
-    const data = getListeningTimeByMonth(fileContent, { artist: song.artist, trackName: song.name }, new Date().getFullYear().toString());
     return (
         <div>
             <button onClick={onBack}>Back</button>
@@ -37,7 +38,7 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent
                     <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
-            <ListeningClockComponent data={data} year={new Date().getFullYear().toString()} />
+            <ListeningClockWrapperComponent fileContent={fileContent} criteria={{ artist: song.artist, trackName: song.name }} firstDate={firstDate} lastDate={lastDate} />
         </div>
     );
 };

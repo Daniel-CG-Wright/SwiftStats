@@ -9,6 +9,8 @@ interface MostListenedToSongsComponentProps {
     fileContent: string;
     startDate: string;
     endDate: string;
+    firstDate: string;
+    lastDate: string;
 }
 
 /**
@@ -18,13 +20,14 @@ interface MostListenedToSongsComponentProps {
  * @param startDate the start date of the filter
  * @param endDate the end date of the filter
  */
-const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileContent, startDate, endDate }) => {
+const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileContent, startDate, endDate, firstDate, lastDate }) => {
     const songsListenedTo = getMostSongsListenedTo(fileContent, startDate, endDate);
     const [selectedSong, setSelectedSong] = useState<Song | null>(null);
     if (selectedSong) {
         return (
             <div>
-                <SongDetailsComponent fileContent={fileContent} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate} />
+                <SongDetailsComponent fileContent={fileContent} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate}
+                    firstDate={firstDate} lastDate={lastDate} />
             </div>
         );
     }
