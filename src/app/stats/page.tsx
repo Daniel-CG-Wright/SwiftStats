@@ -4,9 +4,20 @@ import React, { useState, useEffect } from 'react';
 import FileUploadComponent from './components/FileUploadComponent';
 import MostListenedToSongsComponent from './components/MostListenedSongsComponent';
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
-import ListeningClockFullAnalysisComponent from './components/ListeningClockFullAnalysisComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from '../components/DateSelectComponent';
+
+/*
+TODO:
+- Make the pointer not clicky looking on all tables, only the ones that are clickable
+- Make the table headers clickable to sort the table
+- Adjust spacing of areas
+- Maybe make the background have gradient
+- Add a favicon
+- Add a title
+- Add a description
+- Add a menu bar with links to "About" and "Contact"
+*/
 
 const IndexPage = () => {
     const [fileContent, setFileContent] = useState<string>('');
