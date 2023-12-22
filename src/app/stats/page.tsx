@@ -9,12 +9,10 @@ import DateSelectComponent from '../components/DateSelectComponent';
 
 /*
 TODO:
-- Make the pointer not clicky looking on all tables, only the ones that are clickable DONE
+- Make the pointer not clicky looking on all tables, only the ones that are clickable
 - Make the table headers clickable to sort the table
 - Adjust spacing of areas
 - Maybe make the background have gradient
-- Make back buttons an arrow and make them go to the spot they were at before
-- make the category go back if clicked on again (or go to the top of the table)
 - Add a favicon
 - Add a title
 - Add a description

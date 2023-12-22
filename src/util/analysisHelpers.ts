@@ -1,8 +1,6 @@
 import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCriteria } from '../types';
 
-/**
- * 
- */
+
 
 /**
  * This function takes in the file JSON content and returns a list of songs listened
