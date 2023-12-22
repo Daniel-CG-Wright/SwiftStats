@@ -6,7 +6,7 @@ export interface Artist {
 
 export interface Song {
     name: string;
-    artist: string;
+    artist: Artist;
     minutesListened: number;
     timesStreamed: number;
 }
@@ -42,4 +42,11 @@ export interface AverageListeningData {
 export interface QuantityCriteria {
     artist: string;
     trackName: string;
+}
+
+/**
+ * This interface represents an object of all the data that is needed by all components
+ */
+export interface AnalysisResults {
+    artists: Artist[];
 }

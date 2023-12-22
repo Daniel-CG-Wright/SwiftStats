@@ -48,7 +48,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                 </thead>
                 <tbody>
                     {songsListenedTo.map((song, index) => (
-                        <tr key={index} onClick={() => setSelectedSong(song)}>
+                        <tr className="clickable" key={index} onClick={() => setSelectedSong(song)}>
                             <td>{index + 1}</td>
                             <td>{song.artist}</td>
                             <td>{song.name}</td>
