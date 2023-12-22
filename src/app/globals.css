@@ -3,16 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 111,93,79;
+  --background-end-rgb: 18, 18, 18;
+  --menu-bar-height: 60px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-start-rgb: 18, 18, 18;
+    --background-end-rgb: 18, 18, 18;
   }
 }
 
@@ -20,16 +21,16 @@ body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-start-rgb)),
+      transparent
+    ),
+    rgb(var(--background-end-rgb));
   overflow: auto;
   height: 100vh;
-}
-
-div {
-  background-color: #121212 ;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll, fixed;
+  margin-top: var(--menu-bar-height);
 }
 
 label, span {
@@ -50,16 +51,24 @@ h2 {
   color: #fff;
 }
 
+p {
+  font-size: 1rem;
+  margin: 0;
+  color: #fff;
+
+}
+
 /* Spotify-like table styles */
 table {
   width: 100%;
-  background-color: #121212;
+  /*background-color: rgb(18, 18, 18);*/
   color: #fff;
   border-collapse: collapse;
 }
 
 table thead {
   font-weight: bold;
+  background-color: #201c1c;
 }
 
 table th:hover {
@@ -190,4 +199,33 @@ select option {
 .back-arrow {
   width: 30px;
   height: 20px;
+}
+
+.link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: #1ed760;
+}
+
+.sticky-header {
+  position: sticky;
+  top: var(--menu-bar-height);
+  z-index: 1;
+}
+
+.menu-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--menu-bar-height);
+  background-color: #232323;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1;
 }

@@ -12,8 +12,7 @@ interface Props {
 const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) => {
     const [isSaved, setIsSaved] = useState(false);
     const [latestStreamedTrack, setLatestStreamedTrack] = useState<JSONSong | null>(null);
-    const [lastScrollPos, setLastScrollPos] = useState(0);
-    const [isScrollingUp, setIsScrollingUp] = useState(true);
+
 
     useEffect(() => {
         // when the component mounts, check if there is a saved file and if so, set the file content
@@ -27,20 +26,6 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
         }
     }, []);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollPos = window.pageYOffset;
-            const scrollingUp = lastScrollPos > currentScrollPos;
-            setIsScrollingUp(scrollingUp);
-            setLastScrollPos(currentScrollPos);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [lastScrollPos]);
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
@@ -96,7 +81,7 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
 
     
     return (
-        <div className={isScrollingUp ? 'show' : 'hide'}>
+        <div>
             <div className="py-1">
                 <input type="file" className="file-input" id="file-input" accept=".json" onChange={handleFileChange}/>
                 <label htmlFor="file-input" className="file-input-label">Choose file</label>

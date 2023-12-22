@@ -23,8 +23,8 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
     return (
         <div>
             <label>Use Ctrl + F to search</label>
-            <table>
-                <thead>
+            <table className="w-full divide-y divide-gray-200">
+                <thead className={`sticky-header bg-gray-900`}>
                     <tr>
                         <th>#</th>
                         <th>Artist</th>
@@ -32,7 +32,7 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
                         <th>Times Streamed</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="overflow-auto max-h-screen">
                     {artists.map((artist, index) => (
                         <tr key={index} onClick={() => setSelectedArtist(artist)} className="clickable">
                             <td>{index + 1}</td>
@@ -43,7 +43,7 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
                     ))}
                 </tbody>
             </table>
-            <label>Only artists with at least 1 minute listened are shown</label>
+            <label className="py-2 text-gray-400">Only artists with at least 1 minute listened are shown</label>
         </div>
     );
 };

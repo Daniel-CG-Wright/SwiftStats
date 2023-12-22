@@ -25,6 +25,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
     const artistsListenedTo = getMostListenedArtists(fileContent, startDate, endDate);
     const songsListenedTo = getMostSongsListenedTo(fileContent, startDate, endDate, artistsListenedTo);
     const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+
     if (selectedSong) {
         return (
             <div>
@@ -38,8 +39,8 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
         
         <div>
             <label>Use Ctrl + F to search</label>
-            <table>
-                <thead>
+            <table className="w-full divide-y divide-gray-200">
+                <thead className={`sticky-header bg-gray-900`}>
                     <tr>
                         <th>#</th>
                         <th>Artist</th>
@@ -48,7 +49,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                         <th>Times Streamed</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="overflow-auto max-h-screen">
                     {songsListenedTo.map((song, index) => (
                         <tr key={index} onClick={() => setSelectedSong(song)} className="clickable">
                             <td>{index + 1}</td>
@@ -60,7 +61,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                     ))}
                 </tbody>
             </table>
-            <label>Only songs with at least 1 minute listened are shown</label>
+            <label className="py-2 text-gray-400">Only songs with at least 1 minute listened are shown</label>
         </div>
     );
 }

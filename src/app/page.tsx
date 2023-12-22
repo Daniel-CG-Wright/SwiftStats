@@ -5,18 +5,17 @@ import FileUploadComponent from './components/FileUploadComponent';
 import MostListenedToSongsComponent from './components/MostListenedSongsComponent';
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
-import DateSelectComponent from '../components/DateSelectComponent';
-import { getMostListenedArtists, getMostSongsListenedTo } from '@/util/analysisHelpers';
+import DateSelectComponent from './components/DateSelectComponent';
 
 /*
 TODO:
-- Make the pointer not clicky looking on all tables, only the ones that are clickable
-- Make the table headers clickable to sort the table
-- Adjust spacing of areas
+- Make the pointer not clicky looking on all tables, only the ones that are clickable - DONE
+- Adjust spacing of areas - DONE
 - Maybe make the background have gradient
-- Add a favicon
-- Add a title
-- Add a description
+- Add a favicon - DONE
+- Add a title - DONE
+- Add a description - DONE
+- GET FAVICON TO SHOW UP AGAIN
 - Add a menu bar with links to "About" and "Contact"
 */
 
@@ -73,50 +72,52 @@ const IndexPage = () => {
     
 
     return (
-        <div className='bg-dark flex-col h-full w-full top-0 left-0'>
-            <div className="px-4 py-5">
-                <h1>Upload File</h1>
-                <FileUploadComponent
-                fileContent={fileContent}
-                setFileContent={setFileContent}
-                />
-            </div>
-            <div className="py-4 bg-dark">
-                {fileContent ? (
-                    <div>
-                        <h1 className="px-4">File Analysis</h1>
-                        <div className="px-4 py-2 flex-row" style={{ overflowX: 'auto' }}>
-                            <div className="flex">
-                                {sections.map((section, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setSelectedSection(index)}
-                                        className={index === selectedSection ? '' : 'option-button'}
-                                        style={{ marginRight: '8px' }}
-                                    >
-                                        {section.title}
-                                    </button>
-                                ))}
+        <main className="flex flex-col h-screen">
+            <div className='flex-col h-full w-full top-0 left-0'>
+                <div className="px-4 py-5">
+                    <h1>Upload File</h1>
+                    <FileUploadComponent
+                    fileContent={fileContent}
+                    setFileContent={setFileContent}
+                    />
+                </div>
+                <div className="py-4">
+                    {fileContent ? (
+                        <div>
+                            <h1 className="px-4">File Analysis</h1>
+                            <div className="px-4 py-2 flex-row" style={{ overflowX: 'auto' }}>
+                                <div className="flex">
+                                    {sections.map((section, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setSelectedSection(index)}
+                                            className={index === selectedSection ? '' : 'option-button'}
+                                            style={{ marginRight: '8px' }}
+                                        >
+                                            {section.title}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
+                            {!sections[selectedSection].hideDateSelect &&
+                            <DateSelectComponent
+                            startDate={startDate} setStartDate={setStartDate}
+                            endDate={endDate} setEndDate={setEndDate}
+                            firstDate={firstDate} lastDate={lastDate}
+                            />
+                            }
+                        
+                            <div className="py-2">{sections[selectedSection].component}</div>
                         </div>
-                        {!sections[selectedSection].hideDateSelect &&
-                        <DateSelectComponent
-                        startDate={startDate} setStartDate={setStartDate}
-                        endDate={endDate} setEndDate={setEndDate}
-                        firstDate={firstDate} lastDate={lastDate}
-                        />
-                        }
-                    
-                        <div className="py-2 px-4">{sections[selectedSection].component}</div>
-                    </div>
-                )
-                : (
-                    <div className="px-4 py-2 fixed flex-grow w-full h-full">
-                        <label>Upload a file to see your analysis</label>
-                    </div>
-                )}
+                    )
+                    : (
+                        <div className="px-4 py-2 fixed flex-grow w-full h-full">
+                            <label>Upload a file to see your analysis</label>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </main>
         
     );
 };
