@@ -40,18 +40,21 @@ const DateSelectComponent: React.FC<DateSelectComponentProps> = ({
     const isMaxDateRangeSelected = startDate === firstDate && endDate === lastDate;
 
     return (
-        <div className="date-picker-container">
-            <span className="date-picker-label px-2">Results from:</span>
-            <input type="date" className="date-picker" value={startDate} onChange={e => setStartDate(e.target.value)} min={firstDate} max={lastDate} />
-            <span className="date-picker-separator px-2">to</span>
-            <input type="date" className="date-picker" value={endDate} onChange={e => setEndDate(e.target.value)} min={firstDate} max={lastDate} />
-            <span className="px-4"></span>
-            {
-                isMaxDateRangeSelected ? 
-                (<label>Max date range selected</label>)
-                :
-                (<button className="" onClick={handleClearDates}>Clear Dates</button>)
-            }
+        <div>
+            <div className="date-picker-container">
+                <span className="date-picker-label px-2">Results from:</span>
+                <input type="date" className="date-picker" value={startDate} onChange={e => setStartDate(e.target.value)} min={firstDate} max={lastDate} />
+                <span className="date-picker-separator px-2">to</span>
+                <input type="date" className="date-picker" value={endDate} onChange={e => setEndDate(e.target.value)} min={firstDate} max={lastDate} />
+                <span className="px-4"></span>
+                {
+                    isMaxDateRangeSelected ? 
+                    (<label>Max date range selected</label>)
+                    :
+                    (<button className="" onClick={handleClearDates}>Reset Dates</button>)
+                }
+            </div>
+            <label className="py-2 px-2">Number of days in range: {1 + Math.floor((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24))}</label>
         </div>
     );
 };

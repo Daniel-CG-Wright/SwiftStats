@@ -71,7 +71,7 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ data,
   }, [data]);
 
   return (
-    <div className="bg-dark flex justify-center h-full w-full flex-grow">
+    <div className="flex justify-center h-full w-full flex-grow">
         <svg ref={ref} width={width} height={height} />
     </div>
 

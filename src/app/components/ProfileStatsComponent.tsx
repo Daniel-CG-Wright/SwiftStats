@@ -25,15 +25,13 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileConte
         (!endDate || record.endTime.split(' ')[0] <= endDate)
     );
 
-    const listeningClockData = getListeningTimeByMonth(fileContent, { artist: '', trackName: '' }, new Date().getFullYear().toString());
-
     // Calculate the statistics
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { trackName: '', artist: '' }, startDate, endDate);
     const uniqueArtists = new Set(filteredData.map(record => record.artistName)).size;
     const uniqueTracks = new Set(filteredData.map(record => record.trackName)).size;
 
     return (
-        <div className="py-2 h-full w-full flex flex-grow flex-col">
+        <div className="py-2 px-4 h-full w-full flex flex-grow flex-col">
             <h1>Profile Stats</h1>
             <table>
                 <tbody>

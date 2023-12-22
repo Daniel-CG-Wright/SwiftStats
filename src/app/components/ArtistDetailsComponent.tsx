@@ -21,8 +21,8 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileCon
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { artist: artist.name, trackName: '' }, startDate, endDate);
 
     return (
-        <div>
-            <button onClick={onBack} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6 px-2">
+        <div className="px-4">
+            <button onClick={onBack} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
                 <img src="/backarrow.png" alt="Back" className='back-arrow'/>
             </button>
             <div className="flex items-center">

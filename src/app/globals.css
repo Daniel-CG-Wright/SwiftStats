@@ -71,10 +71,6 @@ table thead {
   background-color: #201c1c;
 }
 
-table th:hover {
-  background-color: #302c2c;
-}
-
 table td,
 table th {
   padding: 12px;
@@ -83,10 +79,6 @@ table th {
 
 table tr:last-child td {
   border-bottom: none;
-}
-
-table tr:hover {
-  background-color: #302c2c;
 }
 
 /* You may want to add your own font-family based on Spotify's style */
@@ -192,8 +184,9 @@ select option {
   outline: none;
 }
 
-.clickable:hover {
+.clickable-row:hover {
   cursor: pointer;
+  background-color: #302c2c;
 }
 
 .back-arrow {

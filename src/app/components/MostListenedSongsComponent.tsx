@@ -29,8 +29,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
     if (selectedSong) {
         return (
             <div>
-                <SongDetailsComponent fileContent={fileContent} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate}
-                    firstDate={firstDate} lastDate={lastDate} />
+                <SongDetailsComponent fileContent={fileContent} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate} firstDate={firstDate} lastDate={lastDate} />
             </div>
         );
     }
@@ -38,7 +37,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
     return (
         
         <div>
-            <label>Use Ctrl + F to search</label>
+            <label className="px-2">Use Ctrl + F to search</label>
             <table className="w-full divide-y divide-gray-200">
                 <thead className={`sticky-header bg-gray-900`}>
                     <tr>
@@ -51,7 +50,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                 </thead>
                 <tbody className="overflow-auto max-h-screen">
                     {songsListenedTo.map((song, index) => (
-                        <tr key={index} onClick={() => setSelectedSong(song)} className="clickable">
+                        <tr key={index} onClick={() => setSelectedSong(song)} className="clickable-row">
                             <td>{index + 1}</td>
                             <td>{song.artist.name}</td>
                             <td>{song.name}</td>

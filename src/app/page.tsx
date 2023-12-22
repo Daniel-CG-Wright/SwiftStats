@@ -6,17 +6,11 @@ import MostListenedToSongsComponent from './components/MostListenedSongsComponen
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from './components/DateSelectComponent';
+import { FiArrowUpCircle, FiArrowDownCircle } from 'react-icons/fi';
 
 /*
 TODO:
-- Make the pointer not clicky looking on all tables, only the ones that are clickable - DONE
-- Adjust spacing of areas - DONE
-- Maybe make the background have gradient
-- Add a favicon - DONE
-- Add a title - DONE
-- Add a description - DONE
 - GET FAVICON TO SHOW UP AGAIN
-- Add a menu bar with links to "About" and "Contact"
 */
 
 const IndexPage = () => {
@@ -26,6 +20,7 @@ const IndexPage = () => {
     const [endDate, setEndDate] = useState<string>('');
     const [firstDate, setFirstDate] = useState<string>('');
     const [lastDate, setLastDate] = useState<string>('');
+    const [showFileUpload, setShowFileUpload] = useState<boolean>(true);
 
     useEffect(() => {
         if (fileContent) {
@@ -35,6 +30,8 @@ const IndexPage = () => {
             setFirstDate(parsedContent[0].endTime.split(' ')[0]);
             // set the last date to the last date in the file formatted from YYYY-MM-DD HH:SS to YYYY-MM-DD
             setLastDate(parsedContent[parsedContent.length - 1].endTime.split(' ')[0]);
+            // hide the file upload by default
+            setShowFileUpload(false);
         }
     }, [fileContent]);
 
@@ -50,13 +47,13 @@ const IndexPage = () => {
         {
             title: 'Songs Ranking',
             component: <MostListenedToSongsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate} />,
+                firstDate={firstDate} lastDate={lastDate} setShowFileUpload={setShowFileUpload} />,
             hideDateSelect: false,
         },
         {
             title: 'Artists Ranking',
             component: <MostListenedArtistsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate} />,
+                firstDate={firstDate} lastDate={lastDate} setShowFileUpload={setShowFileUpload} />,
             hideDateSelect: false,
         },
 
@@ -74,17 +71,25 @@ const IndexPage = () => {
     return (
         <main className="flex flex-col h-screen">
             <div className='flex-col h-full w-full top-0 left-0'>
-                <div className="px-4 py-5">
-                    <h1>Upload File</h1>
-                    <FileUploadComponent
-                    fileContent={fileContent}
-                    setFileContent={setFileContent}
-                    />
-                </div>
+                <button 
+                    onClick={() => setShowFileUpload(!showFileUpload)}
+                    className='absolute left-1/2 transform -translate-x-1/2 rounded-full bg-dark hover:text-standard-green hover:bg-dark active:scale-100'
+                >
+                    {showFileUpload ? '▲' : '▼'}
+                </button>
+                {showFileUpload && (
+                    <div className="px-4 py-5">
+                        <h1>Upload File</h1>
+                        <FileUploadComponent
+                            fileContent={fileContent}
+                            setFileContent={setFileContent}
+                        />
+                    </div>
+                )}
                 <div className="py-4">
                     {fileContent ? (
                         <div>
-                            <h1 className="px-4">File Analysis</h1>
+                            <h1 className="px-4 py-2">File Analysis</h1>
                             <div className="px-4 py-2 flex-row" style={{ overflowX: 'auto' }}>
                                 <div className="flex">
                                     {sections.map((section, index) => (
@@ -100,11 +105,15 @@ const IndexPage = () => {
                                 </div>
                             </div>
                             {!sections[selectedSection].hideDateSelect &&
-                            <DateSelectComponent
-                            startDate={startDate} setStartDate={setStartDate}
-                            endDate={endDate} setEndDate={setEndDate}
-                            firstDate={firstDate} lastDate={lastDate}
-                            />
+                            (
+                                <div className="py-4">
+                                    <DateSelectComponent
+                                    startDate={startDate} setStartDate={setStartDate}
+                                    endDate={endDate} setEndDate={setEndDate}
+                                    firstDate={firstDate} lastDate={lastDate}
+                                    />
+                                </div>
+                            )
                             }
                         
                             <div className="py-2">{sections[selectedSection].component}</div>
