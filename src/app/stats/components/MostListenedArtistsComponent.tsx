@@ -34,7 +34,7 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
                 </thead>
                 <tbody>
                     {artists.map((artist, index) => (
-                        <tr key={index} onClick={() => setSelectedArtist(artist)}>
+                        <tr key={index} onClick={() => setSelectedArtist(artist)} className="clickable">
                             <td>{index + 1}</td>
                             <td>{artist.name}</td>
                             <td>{timeFormat(artist.minutesListened)} ({artist.minutesListened.toFixed(1)} minutes)</td>
@@ -43,6 +43,7 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
                     ))}
                 </tbody>
             </table>
+            <label>Only artists with at least 1 minute listened are shown</label>
         </div>
     );
 };

@@ -64,8 +64,6 @@ table thead {
 
 table th:hover {
   background-color: #302c2c;
-  /* make cursor normal arrow*/
-  cursor: default;
 }
 
 table td,
@@ -80,7 +78,6 @@ table tr:last-child td {
 
 table tr:hover {
   background-color: #302c2c;
-  cursor: pointer;
 }
 
 /* You may want to add your own font-family based on Spotify's style */
@@ -184,4 +181,13 @@ select option {
   transition: background-color 0.3s ease;
   font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
   outline: none;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}
+
+.back-arrow {
+  width: 30px;
+  height: 20px;
 }

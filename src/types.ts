@@ -2,13 +2,15 @@ export interface Artist {
     name: string;
     minutesListened: number;
     timesStreamed: number;
+    position: number;
 }
 
 export interface Song {
     name: string;
-    artist: string;
+    artist: Artist;
     minutesListened: number;
     timesStreamed: number;
+    position: number;
 }
 
 export interface JSONSong {

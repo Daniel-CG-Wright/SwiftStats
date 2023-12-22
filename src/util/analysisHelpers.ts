@@ -11,7 +11,7 @@ import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCr
  * @returns a list of songs listened to in order of most listened to by ms listened
  * (see the Song interface for more details)
  */
-export const getMostSongsListenedTo = (fileContent: string, startDate: string, endDate: string): Song[] => {
+export const getMostSongsListenedTo = (fileContent: string, startDate: string, endDate: string, artists: Artist[]): Song[] => {
     const artistTrackSeparator = '¬sep¬';
     const data = JSON.parse(fileContent);
 
@@ -31,16 +31,22 @@ export const getMostSongsListenedTo = (fileContent: string, startDate: string, e
             streamCountMap.set(key, currentStreamCount + 1);
         }
     });
-
+    
     const songsListenedTo = Array.from(playtimeMap)
         .map(([key, msPlayed]) => ({
-            artist: key.split(artistTrackSeparator)[0],
+            artist: artists.find(artist => artist.name === key.split(artistTrackSeparator)[0]) || { name: key.split(artistTrackSeparator)[0], minutesListened: 0, timesStreamed: 0, position: 0 },
             name: key.split(artistTrackSeparator)[1],
             minutesListened: Number((msPlayed / 60000).toFixed(1)),
             timesStreamed: streamCountMap.get(key) || 0,
+            position: 0,
         }))
         .filter(song => song.minutesListened > 1)
         .sort((a, b) => b.minutesListened - a.minutesListened);
+
+    // Add position to each song
+    songsListenedTo.forEach((song, index) => {
+        song.position = index + 1;
+    });
 
     return songsListenedTo;
 };
@@ -71,10 +77,14 @@ export const getMostListenedArtists = (fileContent: string, startDate: string, e
         }
     });
 
-    const artists = Array.from(playtimeMap, ([name, minutesListened]) => ({ name, minutesListened: minutesListened / 60000, timesStreamed: timesStreamedMap.get(name) || 0}));
+    const artists = Array.from(playtimeMap, ([name, minutesListened]) => ({ name, minutesListened: minutesListened / 60000, timesStreamed: timesStreamedMap.get(name) || 0, position: 0})).filter(artist => artist.minutesListened > 1);
+    // need to sort artists and assign position, then return
+    artists.sort((a, b) => b.minutesListened - a.minutesListened);
+    artists.forEach((artist, index) => {
+        artist.position = index + 1;
+    });
 
-    // Sort artists by minutes listened in descending order
-    return artists.filter(song => song.minutesListened > 1).sort((a, b) => b.minutesListened - a.minutesListened);
+    return artists;
 };
 
 /**

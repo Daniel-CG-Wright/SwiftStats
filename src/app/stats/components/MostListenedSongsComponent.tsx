@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Song } from '@/types';
 import { timeFormat } from '@/util/dateTimeFormat';
 import SongDetailsComponent from './SongDetailsComponent';
-import { getMostSongsListenedTo } from '@/util/analysisHelpers';
+import { getMostSongsListenedTo, getMostListenedArtists } from '@/util/analysisHelpers';
 
 interface MostListenedToSongsComponentProps {
     fileContent: string;
@@ -21,7 +21,9 @@ interface MostListenedToSongsComponentProps {
  * @param endDate the end date of the filter
  */
 const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileContent, startDate, endDate, firstDate, lastDate }) => {
-    const songsListenedTo = getMostSongsListenedTo(fileContent, startDate, endDate);
+    // need the artists so that we can display their position
+    const artistsListenedTo = getMostListenedArtists(fileContent, startDate, endDate);
+    const songsListenedTo = getMostSongsListenedTo(fileContent, startDate, endDate, artistsListenedTo);
     const [selectedSong, setSelectedSong] = useState<Song | null>(null);
     if (selectedSong) {
         return (
@@ -48,9 +50,9 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                 </thead>
                 <tbody>
                     {songsListenedTo.map((song, index) => (
-                        <tr key={index} onClick={() => setSelectedSong(song)}>
+                        <tr key={index} onClick={() => setSelectedSong(song)} className="clickable">
                             <td>{index + 1}</td>
-                            <td>{song.artist}</td>
+                            <td>{song.artist.name}</td>
                             <td>{song.name}</td>
                             <td>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
                             <td>{song.timesStreamed}</td>
@@ -58,6 +60,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                     ))}
                 </tbody>
             </table>
+            <label>Only songs with at least 1 minute listened are shown</label>
         </div>
     );
 }

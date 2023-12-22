@@ -1,7 +1,7 @@
 import React from 'react';
 import { Artist } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
-import { getListeningTimeByMonth, getDetailedData } from '@/util/analysisHelpers';
+import { getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 
 interface ArtistDetailsComponentProps {
@@ -22,9 +22,12 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileCon
 
     return (
         <div>
-            <button onClick={onBack}>Back</button>
-            <h1>{artist.name}</h1>
-
+            <button onClick={onBack} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6 px-2">
+                <img src="/backarrow.png" alt="Back" className='back-arrow'/>
+            </button>
+            <div className="flex items-center">
+                <h1>{artist.name}</h1><span className="text-gray-400 px-2 text-3xl font-bold m-0">#{artist.position}</span>
+            </div>
             <table>
                 <tbody>
                     <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
