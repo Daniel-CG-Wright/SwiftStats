@@ -18,6 +18,7 @@ const ListeningClockWrapperComponent: React.FC<ListeningClockWrapperComponentPro
 
     return (
         <div>
+            <h2 className="py-2">Stream Time Clock</h2>
             <div className="py-2 flex-row" style={{ overflowX: 'auto' }}>
                 <div className="flex">
                     {

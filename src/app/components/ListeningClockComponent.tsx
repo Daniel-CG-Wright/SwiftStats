@@ -44,6 +44,10 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ data,
             .padRadius(radius))
         .attr('transform', `translate(${width / 2}, ${height / 2})`)
         .attr('data-tip', d => `Listening Time: ${d.value} minutes`)
+        .on('mouseover', function() { d3.select(this).attr('fill', '#1ed760'); }) // Lighter green on hover
+        .on('mouseout', function() { d3.select(this).attr('fill', '#1db954'); }) // Original color when mouse leaves
+        .append('title') // Append a title element to each bar
+        .text(d => `${d.value} minutes`); // The text content of the title will be the value of the bar
 
         // Add labels
         const labelRadius = radius * 0.4; // Adjust this to place labels inside or outside the bars

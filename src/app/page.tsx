@@ -47,13 +47,13 @@ const IndexPage = () => {
         {
             title: 'Songs Ranking',
             component: <MostListenedToSongsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate} setShowFileUpload={setShowFileUpload} />,
+                firstDate={firstDate} lastDate={lastDate}/>,
             hideDateSelect: false,
         },
         {
             title: 'Artists Ranking',
             component: <MostListenedArtistsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate} setShowFileUpload={setShowFileUpload} />,
+                firstDate={firstDate} lastDate={lastDate}/>,
             hideDateSelect: false,
         },
 
