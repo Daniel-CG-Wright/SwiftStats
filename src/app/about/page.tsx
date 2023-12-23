@@ -8,7 +8,7 @@ const AboutPage: React.FC = () => {
             <div className="text-section">
                 <p>
                     SwiftStats is a web app that allows you to analyze your Spotify listening history. It uses the JSON data provided by Spotify when you
-                    request your listening data via <a className="inline-link" href="https://www.spotify.com/uk/account/privacy/">Spotify's privacy page</a> to provide accurate
+                    request your listening data via <a className="inline-link" href="https://www.spotify.com/uk/account/privacy/">Spotify&lsquo;s privacy page</a> to provide accurate
                     statistics about your listening habits. Thank you for using SwiftStats!
                 </p>
             </div>

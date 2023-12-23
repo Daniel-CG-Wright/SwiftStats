@@ -38,8 +38,8 @@ const DetailedInfoComponent: React.FC<DetailedInfoComponentProps> = ({ timeListe
                     }
                 </div>
             </div>
-            <tr><td>Minutes Listened</td><td>{timeFormat(averages[selectedAveragePeriod].minutesListened)} ({(averages[selectedAveragePeriod].minutesListened).toFixed(1)} minutes)</td></tr>
-            <tr><td>Times Streamed</td><td>{(averages[selectedAveragePeriod].timesStreamed).toFixed(1)}</td></tr>
+            <tr><td>Minutes Listened</td><td>{timeFormat(averages[selectedAveragePeriod as keyof AverageListeningData].minutesListened)} ({(averages[selectedAveragePeriod as keyof AverageListeningData].minutesListened).toFixed(1)} minutes)</td></tr>
+            <tr><td>Times Streamed</td><td>{(averages[selectedAveragePeriod as keyof AverageListeningData].timesStreamed).toFixed(1)}</td></tr>
         </>
     );
 }
