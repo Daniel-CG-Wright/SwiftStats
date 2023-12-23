@@ -38,18 +38,17 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent
     const handleBackClick = () => {
         // Get the index of the clicked song row
         const clickedSongRow = sessionStorage.getItem('clickedSongRow');
-        console.log(clickedSongRow);
       
         // Scroll to the clicked song row
         if (clickedSongRow) {
-            setTimeout(() => {
-                const songRowElement = document.querySelector(`.clickable-row:nth-child(${parseInt(clickedSongRow) + 1})`);
-                if (songRowElement) {
-                    const offsetTop = songRowElement.getBoundingClientRect().top + window.scrollY;
-                    const middleOffset = offsetTop - window.innerHeight / 2;
-                    window.scrollTo({ top: middleOffset });
-                }
-            }, 1);
+          setTimeout(() => {
+            const songRowElement = document.querySelector(`.clickable-row:nth-child(${parseInt(clickedSongRow) + 1})`);
+            if (songRowElement) {
+              const offsetTop = songRowElement.getBoundingClientRect().top + window.scrollY;
+              const middleOffset = offsetTop - window.innerHeight / 2;
+              window.scrollTo({ top: middleOffset });
+            }
+          }, 1);
         }
       
         // Call the original onBack function
