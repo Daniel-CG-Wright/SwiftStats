@@ -28,8 +28,7 @@ const AboutPage: React.FC = () => {
             <div className="text-section">
                 <h2>Development</h2>
                 <p>
-                    SwiftStats is completely free and open source, developed by Daniel Wright as a personal project. The source code can be found on 
-                    <a className="inline-link" href="https://github.com/Daniel-CG-Wright/SwiftStats">GitHub</a>. If you have any suggestions or issues, please raise them on the
+                    SwiftStats is completely free and open source, developed by Daniel Wright as a personal project. The source code can be found on <a className="inline-link" href="https://github.com/Daniel-CG-Wright/SwiftStats">GitHub</a>. If you have any suggestions or issues, please raise them on the
                     GitHub repo. If you like this silly little website and have cash to spare,
                     please consider donating to me via <a className="inline-link" href="https://paypal.me/danielwright1322?country.x=GB&locale.x=en_GB">PayPal</a>.
                 </p>
