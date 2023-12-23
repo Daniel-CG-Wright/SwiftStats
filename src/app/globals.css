@@ -55,7 +55,12 @@ p {
   font-size: 1rem;
   margin: 0;
   color: #fff;
+  padding: 10px 16px;
 
+}
+
+.text-section {
+  padding: 10px 16px;
 }
 
 /* Spotify-like table styles */

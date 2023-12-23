@@ -77,14 +77,17 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
         setFileContent('');
         setIsSaved(false);
         setLatestStreamedTrack(null);
+        // reset the file input
+        const fileInput = document.getElementById('file-input') as HTMLInputElement;
+        fileInput.value = '';
     };
 
     
     return (
         <div>
             <div className="py-1">
-                <input type="file" className="file-input" id="file-input" accept=".json" onChange={handleFileChange}/>
-                <label htmlFor="file-input" className="file-input-label">Choose file</label>
+                <input type="file" className="file-input" id="file-input" accept=".json" onChange={handleFileChange} />
+                <label htmlFor="file-input" className="file-input-label">Choose file</label><span className="px-2">(upload StreamingHistory0.json)</span>
                 {latestStreamedTrack && (
                 <div>
                     <label>

@@ -26,8 +26,6 @@ const IndexPage = () => {
             setFirstDate(parsedContent[0].endTime.split(' ')[0]);
             // set the last date to the last date in the file formatted from YYYY-MM-DD HH:SS to YYYY-MM-DD
             setLastDate(parsedContent[parsedContent.length - 1].endTime.split(' ')[0]);
-            // hide the file upload by default
-            setShowFileUpload(false);
             // filter out any songs that have less than 5000 ms played
             const filteredContent = parsedContent.filter((song: any) => song.msPlayed >= cutoffTime);
             // set the file content to the filtered content
@@ -123,7 +121,7 @@ const IndexPage = () => {
                         </div>
                     )
                     : (
-                        <div className="px-4 py-2 fixed flex-grow w-full h-full">
+                        <div className="px-4 py-2">
                             <label>Upload a file to see your analysis</label>
                         </div>
                     )}
