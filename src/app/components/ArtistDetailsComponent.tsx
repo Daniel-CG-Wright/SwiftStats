@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Artist } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getDetailedData } from '@/util/analysisHelpers';
@@ -19,10 +19,38 @@ interface ArtistDetailsComponentProps {
  */
 const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileContent, artist, startDate, endDate, firstDate, lastDate, onBack }) => {
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { artist: artist.name, trackName: '' }, startDate, endDate);
+    const backButtonRef = useRef<HTMLButtonElement>(null);
+    useEffect(() => {
+        if (backButtonRef.current) {
+            window.scrollTo({
+                top: backButtonRef.current.offsetTop - 60,
+            });
+        }
+    
+    }, []);
 
+    const handleBackClick = () => {
+        // Get the index of the clicked song row
+        const clickedArtistRow = sessionStorage.getItem('clickedArtistRow');
+    
+        // Scroll to the clicked song row
+        if (clickedArtistRow) {
+            setTimeout(() => {
+                const songRowElement = document.querySelector(`.clickable-row:nth-child(${parseInt(clickedArtistRow) + 1})`);
+                if (songRowElement) {
+                    const offsetTop = songRowElement.getBoundingClientRect().top + window.scrollY;
+                    const middleOffset = offsetTop - window.innerHeight / 2;
+                    window.scrollTo({ top: middleOffset });
+                }
+            }, 1);
+        }
+  
+    // Call the original onBack function
+    onBack();
+  };
     return (
         <div className="px-4">
-            <button onClick={onBack} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
+            <button ref={backButtonRef} onClick={handleBackClick} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
                 <img src="/backarrow.png" alt="Back" className='back-arrow'/>
             </button>
             <div className="flex items-center">

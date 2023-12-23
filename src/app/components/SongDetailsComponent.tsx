@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Song } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getListeningTimeByMonth, getDetailedData } from '@/util/analysisHelpers';
@@ -24,12 +24,45 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent
     // We want to display the song name, artist, time listened, times streamed, average time listened per stream
     // in the same format as the profile stats page.
     // TODO have an arrow left for the back button
+    const songNameRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+            if (songNameRef.current) {
+                window.scrollTo({
+                    top: songNameRef.current.offsetTop - 60,
+                });
+            }
+        
+    }, []);
+
+    const handleBackClick = () => {
+        // Get the index of the clicked song row
+        const clickedSongRow = sessionStorage.getItem('clickedSongRow');
+        console.log(clickedSongRow);
+      
+        // Scroll to the clicked song row
+        if (clickedSongRow) {
+            setTimeout(() => {
+                const songRowElement = document.querySelector(`.clickable-row:nth-child(${parseInt(clickedSongRow) + 1})`);
+                if (songRowElement) {
+                    const offsetTop = songRowElement.getBoundingClientRect().top + window.scrollY;
+                    const middleOffset = offsetTop - window.innerHeight / 2;
+                    window.scrollTo({ top: middleOffset });
+                }
+            }, 1);
+        }
+      
+        // Call the original onBack function
+        onBack();
+      };
+
+    
 
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { trackName: song.name, artist: song.artist.name }, startDate, endDate);
 
     return (
         <div className="px-4">
-            <button onClick={onBack} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
+            <button ref={songNameRef} onClick={handleBackClick} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
                 <img src="/backarrow.png" alt="Back" className='back-arrow'/>
             </button>
             <div className="flex items-center">

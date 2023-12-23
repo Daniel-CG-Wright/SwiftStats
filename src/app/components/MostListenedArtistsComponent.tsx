@@ -16,9 +16,18 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
     const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
     const artists = getMostListenedArtists(fileContent, startDate, endDate);
 
+    const handleArtistClick = (artist: Artist, index: number) => {
+        // Save the current scroll position
+        sessionStorage.setItem('clickedArtistRow', index.toString());
+      
+        // Set the selected song
+        setSelectedArtist(artist);
+    };
+
     if (selectedArtist) {
         return <ArtistDetailsComponent fileContent={fileContent} artist={selectedArtist} startDate={startDate} endDate={endDate} onBack={() => setSelectedArtist(null)} firstDate={firstDate} lastDate={lastDate} />;
     }
+
     
     return (
         <div>
@@ -34,7 +43,7 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
                 </thead>
                 <tbody className="overflow-auto max-h-screen">
                     {artists.map((artist, index) => (
-                        <tr key={index} onClick={() => setSelectedArtist(artist)} className="clickable-row">
+                        <tr key={index} onClick={() => handleArtistClick(artist, index)} className="clickable-row">
                             <td>{index + 1}</td>
                             <td>{artist.name}</td>
                             <td>{timeFormat(artist.minutesListened)} ({artist.minutesListened.toFixed(1)} minutes)</td>

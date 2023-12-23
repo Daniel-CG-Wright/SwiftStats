@@ -1,11 +1,16 @@
 // src/app/components/MenuBarComponent.tsx
 "use client"
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 const MenuBarComponent: React.FC = () => {
     const pathName = usePathname(); // Get the current route
+    
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }
+    , [pathName]);
 
     return (
         <nav className="menu-bar">

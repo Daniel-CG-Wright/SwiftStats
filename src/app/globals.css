@@ -250,3 +250,19 @@ select option {
 .inactive-menubar-link {
   color: #fff;
 }
+
+.inline-link {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.dark-background-page {
+  /* have a dark purple top and a black bottom */
+  background: linear-gradient(
+      to bottom,
+      rgb(75,28,75),
+      transparent
+    ),
+    rgb(var(--background-end-rgb));
+
+}

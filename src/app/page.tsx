@@ -14,7 +14,7 @@ const IndexPage = () => {
     const [endDate, setEndDate] = useState<string>('');
     const [firstDate, setFirstDate] = useState<string>('');
     const [lastDate, setLastDate] = useState<string>('');
-    const [showFileUpload, setShowFileUpload] = useState<boolean>(true);
+    const [showFileUpload, setShowFileUpload] = useState<boolean>(false);
 
     const cutoffTime = 5000; // 5000ms at least to count as a song listened to
 
@@ -30,8 +30,10 @@ const IndexPage = () => {
             const filteredContent = parsedContent.filter((song: any) => song.msPlayed >= cutoffTime);
             // set the file content to the filtered content
             setFileContent(JSON.stringify(filteredContent));
+            setShowFileUpload(false);
         }
-        else {
+        else
+        {
             setShowFileUpload(true);
         }
     }, [fileContent]);
@@ -78,15 +80,13 @@ const IndexPage = () => {
                 >
                     {showFileUpload ? '▲' : '▼'}
                 </button>
-                {showFileUpload && (
-                    <div className="px-4 py-5">
-                        <h1>Upload File</h1>
-                        <FileUploadComponent
-                            fileContent={fileContent}
-                            setFileContent={setFileContent}
-                        />
-                    </div>
-                )}
+                <div className={`px-4 py-5 ${showFileUpload ? 'block' : 'hidden'}`}>
+                    <h1>Upload File</h1>
+                    <FileUploadComponent
+                        fileContent={fileContent}
+                        setFileContent={setFileContent}
+                    />
+                </div>
                 <div className="py-4 mt-2">
                     {fileContent ? (
                         <div>

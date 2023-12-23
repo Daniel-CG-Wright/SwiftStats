@@ -30,6 +30,11 @@ const DateSelectComponent: React.FC<DateSelectComponentProps> = ({
         }
     }, [startDate, endDate, setStartDate, setEndDate, firstDate, lastDate]);
 
+    useEffect(() => {
+        // Clear the clicked song row when the dates are changed
+        sessionStorage.removeItem('clickedSongRow');
+      }, [startDate, endDate]);
+
     // handles the button input that will clear the date selection
     const handleClearDates = () => {
         setStartDate(firstDate);

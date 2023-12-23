@@ -9,7 +9,7 @@ const HowToUsePage: React.FC = () => {
             <div className="text-section">
                 <h2>Step 1: Request your listening data</h2>
                 <p>
-                    To request your listening data, go to <a href="https://www.spotify.com/uk/account/privacy/">Spotify's privacy page</a>.
+                    To request your listening data, go to <a className="inline-link" href="https://www.spotify.com/uk/account/privacy/">Spotify's privacy page</a>.
                     After logging in, you then have 2 options - you can request your extended streaming history, or just your basic streaming history.
                     The extended streaming history takes longer to receive, but it will have your entire listening history, whereas the basic streaming
                     history will only have your last 12 months of listening history. Once you have requested your data, you will receive an email from
