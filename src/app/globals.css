@@ -3,16 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 111,93,79;
+  --background-end-rgb: 18, 18, 18;
+  --menu-bar-height: 60px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-start-rgb: 111,93,79;
+    --background-end-rgb: 18, 18, 18;
   }
 }
 
@@ -20,8 +21,248 @@ body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-start-rgb)),
+      transparent
+    ),
+    rgb(var(--background-end-rgb));
+  overflow: auto;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll, fixed;
+  margin-top: var(--menu-bar-height);
+}
+
+label, span {
+  color: #fff;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  color: #fff;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0;
+  color: #fff;
+}
+
+p {
+  font-size: 1rem;
+  margin: 0;
+  color: #fff;
+  padding: 10px 16px;
+
+}
+
+.text-section {
+  padding: 10px 16px;
+}
+
+/* Spotify-like table styles */
+table {
+  width: 100%;
+  /*background-color: rgb(18, 18, 18);*/
+  color: #fff;
+  border-collapse: collapse;
+}
+
+table thead {
+  font-weight: bold;
+  background-color: #201c1c;
+}
+
+table td,
+table th {
+  padding: 12px;
+  border-bottom: 1px solid #121212;
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+/* You may want to add your own font-family based on Spotify's style */
+table {
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}
+
+/* Optional: Right-aligned elements, like duration */
+.right-aligned {
+  text-align: right;
+}
+
+button, .file-input-label {
+  padding: 5px 10px;
+  background-color: #1db954;
+  color: white;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}
+
+button:hover, .file-input-label {
+  background-color: #1ed760; /* Slightly lighter green on hover */
+}
+
+button:active, .file-input-label {
+  transform: scale(0.98); /* Slightly shrink when clicked */
+}
+
+/* Remove default button styles */
+button:focus, .file-input-label {
+  outline: none;
+}
+
+.file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.option-button {
+  padding: 5px 10px;
+  background-color: #232323;
+  color: white;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}
+
+.hide {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.show {
+  transform: translateY(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.date-picker {
+  background-color: #232323;
+  color: white;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  padding: 3px 10px;
+}
+
+select {
+  background-color: #232323;
+  color: white;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  appearance: none;
+  outline: none;
+
+}
+
+select:hover {
+  background-color: #1ed760; /* Slightly lighter green on hover */
+  cursor: pointer;
+}
+
+select option {
+  background-color: #232323;
+  color: white;
+  border: none;
+  border-radius: 500px; /* Gives a pill-like shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  outline: none;
+}
+
+.clickable-row:hover {
+  cursor: pointer;
+  background-color: #302c2c;
+}
+
+.back-arrow {
+  width: 30px;
+  height: 20px;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.link:hover {
+  color: #1ed760;
+}
+
+.sticky-header {
+  position: sticky;
+  top: var(--menu-bar-height);
+  z-index: 1;
+  background-color: rgb(99, 83, 70);
+}
+
+.menu-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--menu-bar-height);
+  background-color: #232323;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1;
+}
+
+.tooltip {
+  position: absolute;
+  visibility: hidden;
+  background-color: #302c2c;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.active-menubar-link {
+  color: #1ed760;
+  text-decoration: underline;
+  text-decoration-color: #1ed760;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 2px;
+}
+
+.inactive-menubar-link {
+  color: #fff;
+}
+
+.inline-link {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.dark-background-page {
+  /* have a dark purple top and a black bottom */
+  background: linear-gradient(
+      to bottom,
+      rgb(75,28,75),
+      transparent
+    ),
+    rgb(var(--background-end-rgb));
+
 }
