@@ -6,12 +6,6 @@ import MostListenedToSongsComponent from './components/MostListenedSongsComponen
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from './components/DateSelectComponent';
-import { FiArrowUpCircle, FiArrowDownCircle } from 'react-icons/fi';
-
-/*
-TODO:
-- GET FAVICON TO SHOW UP AGAIN
-*/
 
 const IndexPage = () => {
     const [fileContent, setFileContent] = useState<string>('');

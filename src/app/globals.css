@@ -207,7 +207,7 @@ select option {
   position: sticky;
   top: var(--menu-bar-height);
   z-index: 1;
-  background-color: rgb(111,93,79);
+  background-color: rgb(99, 83, 70);
 }
 
 .menu-bar {
@@ -232,4 +232,16 @@ select option {
   padding: 5px;
   border-radius: 5px;
   pointer-events: none;
+}
+
+.active-menubar-link {
+  color: #1ed760;
+  text-decoration: underline;
+  text-decoration-color: #1ed760;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 2px;
+}
+
+.inactive-menubar-link {
+  color: #fff;
 }
