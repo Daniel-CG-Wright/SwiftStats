@@ -44,10 +44,20 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ data,
             .padRadius(radius))
         .attr('transform', `translate(${width / 2}, ${height / 2})`)
         .attr('data-tip', d => `Listening Time: ${d.value} minutes`)
-        .on('mouseover', function() { d3.select(this).attr('fill', '#1ed760'); }) // Lighter green on hover
-        .on('mouseout', function() { d3.select(this).attr('fill', '#1db954'); }) // Original color when mouse leaves
-        .append('title') // Append a title element to each bar
-        .text(d => `${d.value} minutes`); // The text content of the title will be the value of the bar
+        .on('mouseover', function() {
+          d3.select('#tooltip').style('visibility', 'visible');
+          d3.select(this).attr('fill', '#1ed760');
+        })
+        .on('mousemove', function(event, d) {
+            d3.select('#tooltip')
+                .text(`${months[parseInt(d.month)-1]}: ${d.value} minutes`)
+                .style('left', `${event.pageX}px`)
+                .style('top', `${event.pageY}px`);
+        })
+        .on('mouseout', function() {
+            d3.select('#tooltip').style('visibility', 'hidden');
+            d3.select(this).attr('fill', '#1db954');
+        });
 
         // Add labels
         const labelRadius = radius * 0.4; // Adjust this to place labels inside or outside the bars
@@ -68,6 +78,18 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ data,
         .attr('dy', '0.35em')
         .attr('text-anchor', "start")
         .text(d => months[parseInt(d.month) - 1])
+        .on('mouseover', function() {
+          d3.select('#tooltip').style('visibility', 'visible');
+        })
+        .on('mousemove', function(event, d) {
+            d3.select('#tooltip')
+                .text(`${months[parseInt(d.month)-1]}: ${d.value} minutes`)
+                .style('left', `${event.pageX}px`)
+                .style('top', `${event.pageY}px`);
+        })
+        .on('mouseout', function() {
+            d3.select('#tooltip').style('visibility', 'hidden');
+        })
         .attr('fill', 'white');
 
 
@@ -76,6 +98,7 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ data,
 
   return (
     <div className="flex justify-center h-full w-full flex-grow">
+        <div id="tooltip" className="tooltip"></div>
         <svg ref={ref} width={width} height={height} />
     </div>
 

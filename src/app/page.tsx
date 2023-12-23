@@ -22,6 +22,8 @@ const IndexPage = () => {
     const [lastDate, setLastDate] = useState<string>('');
     const [showFileUpload, setShowFileUpload] = useState<boolean>(true);
 
+    const cutoffTime = 5000; // 5000ms at least to count as a song listened to
+
     useEffect(() => {
         if (fileContent) {
             // set the first and last dates
@@ -32,6 +34,13 @@ const IndexPage = () => {
             setLastDate(parsedContent[parsedContent.length - 1].endTime.split(' ')[0]);
             // hide the file upload by default
             setShowFileUpload(false);
+            // filter out any songs that have less than 5000 ms played
+            const filteredContent = parsedContent.filter((song: any) => song.msPlayed >= cutoffTime);
+            // set the file content to the filtered content
+            setFileContent(JSON.stringify(filteredContent));
+        }
+        else {
+            setShowFileUpload(true);
         }
     }, [fileContent]);
 
@@ -86,7 +95,7 @@ const IndexPage = () => {
                         />
                     </div>
                 )}
-                <div className="py-4">
+                <div className="py-4 mt-2">
                     {fileContent ? (
                         <div>
                             <h1 className="px-4 py-2">File Analysis</h1>

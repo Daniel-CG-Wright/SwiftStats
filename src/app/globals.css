@@ -12,7 +12,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 18, 18, 18;
+    --background-start-rgb: 111,93,79;
     --background-end-rgb: 18, 18, 18;
   }
 }
@@ -153,6 +153,7 @@ button:focus, .file-input-label {
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  padding: 3px 10px;
 }
 
 select {
@@ -195,7 +196,6 @@ select option {
 }
 
 .link {
-  color: #fff;
   text-decoration: none;
 }
 
@@ -207,6 +207,7 @@ select option {
   position: sticky;
   top: var(--menu-bar-height);
   z-index: 1;
+  background-color: rgb(111,93,79);
 }
 
 .menu-bar {
@@ -221,4 +222,14 @@ select option {
   justify-content: space-between;
   padding: 0 20px;
   z-index: 1;
+}
+
+.tooltip {
+  position: absolute;
+  visibility: hidden;
+  background-color: #302c2c;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  pointer-events: none;
 }

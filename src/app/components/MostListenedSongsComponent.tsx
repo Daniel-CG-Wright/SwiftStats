@@ -39,7 +39,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
         <div>
             <label className="px-2">Use Ctrl + F to search</label>
             <table className="w-full divide-y divide-gray-200">
-                <thead className={`sticky-header bg-gray-900`}>
+                <thead className={`sticky-header`}>
                     <tr>
                         <th>#</th>
                         <th>Artist</th>
