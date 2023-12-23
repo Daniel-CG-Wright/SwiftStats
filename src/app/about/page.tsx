@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const AboutPage: React.FC = () => {
     return (
@@ -32,6 +33,9 @@ const AboutPage: React.FC = () => {
                     GitHub repo. If you like this silly little website and have cash to spare,
                     please consider donating to me via <a className="inline-link" href="https://paypal.me/danielwright1322?country.x=GB&locale.x=en_GB">PayPal</a>.
                 </p>
+            </div>
+            <div className="items-center flex justify-center">
+                <Image src="/logo.png" alt="SwiftStats Logo" className="mr-2" width={256} height={256} />
             </div>
         </div>
     );

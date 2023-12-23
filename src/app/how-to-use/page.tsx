@@ -36,9 +36,8 @@ const HowToUsePage: React.FC = () => {
                 <h2>Step 4: Explore your data</h2>
                 <p>
                     You can now explore your listening data. You can use the date pickers to select a date range to filter your data by. You can also
-                    click on the different sections to see more information about your listening habits. You can click on a song to see more information
-                    about that song, including a listening clock and a graph of the times you listened to that song. You can also click on an artist to
-                    see more information about that artist, including a graph of the times you listened to that artist.
+                    click on the different sections to see more information about your listening habits. You can click on a song or artist to see more information,
+                    including a listening clock.
                 </p>
             </div>
         </div>
