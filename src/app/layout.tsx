@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'SwiftStats',
-  description: 'Shows your Spotify stats in style. The best sites in life are free!',
+  description: 'Provides a swift analysis of your Spotify stats, in style. The best websites in life are free!',
 }
 
 export default function RootLayout({

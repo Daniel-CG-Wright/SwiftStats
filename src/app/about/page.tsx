@@ -13,9 +13,17 @@ const AboutPage: React.FC = () => {
                 </p>
             </div>
             <div className="text-section">
+                <h2>Payment</h2>
+                <p>
+                    The best websites in life are free! SwiftStats is completely free to use.
+                    If you like this little project and have cash to spare, please consider donating to me via <a className="inline-link" href="https://paypal.me/danielwright1322?country.x=GB&locale.x=en_GB">PayPal</a>.
+                </p>
+            </div>
+            <div className="text-section">
                 <h2>Privacy</h2>
                 <p>
-                    SwiftStats does not store any of your data. As it is open source, you can examine the source code to verify this.
+                    SwiftStats does not store any of your data on its servers. As it is open source, you can examine the source code to verify this.
+                    All processing is done in your browser, and when saving a file, the file is saved locally and not on any servers.
                 </p>
             </div>
             <div className="text-section">
@@ -30,8 +38,7 @@ const AboutPage: React.FC = () => {
                 <h2>Development</h2>
                 <p>
                     SwiftStats is completely free and open source, developed by Daniel Wright as a personal project. The source code can be found on <a className="inline-link" href="https://github.com/Daniel-CG-Wright/SwiftStats">GitHub</a>. If you have any suggestions or issues, please raise them on the
-                    GitHub repo. If you like this silly little website and have cash to spare,
-                    please consider donating to me via <a className="inline-link" href="https://paypal.me/danielwright1322?country.x=GB&locale.x=en_GB">PayPal</a>.
+                    GitHub repo, feel free to fork the project! Please see the license for legal information.
                 </p>
             </div>
             <div className="items-center flex justify-center">
