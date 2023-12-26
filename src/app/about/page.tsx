@@ -37,7 +37,7 @@ const AboutPage: React.FC = () => {
             <div className="text-section">
                 <h2>Development</h2>
                 <p>
-                    Stats Now is completely free and open source, developed by Daniel Wright as a personal project. The source code can be found on <a className="inline-link" href="https://github.com/Daniel-CG-Wright/Stats Now">GitHub</a>. If you have any suggestions or issues, please raise them on the
+                    Stats Now is completely free and open source, developed by Daniel Wright as a personal project. The source code can be found on <a className="inline-link" href="https://github.com/Daniel-CG-Wright/SwiftStats">GitHub</a>. If you have any suggestions or issues, please raise them on the
                     GitHub repo, feel free to fork the project! Please see the license for legal information.
                 </p>
             </div>
