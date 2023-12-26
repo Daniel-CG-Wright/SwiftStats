@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const AboutPage: React.FC = () => {
     return (
-        <div className="px-2 py-4">
+        <div className="px-2 py-4 dark-background-page">
             <h1>About SwiftStats</h1>
             <div className="text-section">
                 <p>

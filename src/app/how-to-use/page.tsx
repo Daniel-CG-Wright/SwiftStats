@@ -4,7 +4,7 @@ import React from 'react';
 
 const HowToUsePage: React.FC = () => {
     return (
-        <div className="px-2 py-4">
+        <div className="px-2 py-4 blue-background-page">
             <h1>How To Use SwiftStats</h1>
             <div className="text-section">
                 <h2>Step 1: Request your listening data</h2>

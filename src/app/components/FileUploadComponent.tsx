@@ -42,7 +42,8 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
                     setFileContent(content);
                     const parsedContent = JSON.parse(content);
                     setLatestStreamedTrack(parsedContent[parsedContent.length - 1]);
-                    setIsSaved(false);
+                    localStorage.setItem('uploadedFile', content);
+                    setIsSaved(true);
                 }
             };
             reader.readAsText(file);
@@ -66,13 +67,6 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
         return false;
     };
 
-    const handleSaveClick = () => {
-        if (fileContent) {
-            localStorage.setItem('uploadedFile', fileContent);
-            setIsSaved(true);
-        }
-    };
-
     const clearFile = () => {
         setFileContent('');
         setIsSaved(false);
@@ -82,6 +76,10 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
         fileInput.value = '';
     };
 
+    const deleteSavedFile = () => {
+        localStorage.removeItem('uploadedFile');
+        setIsSaved(false);
+    };
     
     return (
         <div>
@@ -98,10 +96,14 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
                 }
             </div>
             <div className="py-1">
-                {fileContent && !isSaved && (
-                    <button onClick={handleSaveClick}>Save for next time</button>
+                {fileContent && isSaved && (
+                    <button onClick={deleteSavedFile}>Remove file from local storage</button>
                 )}
-                {isSaved && <span className='text-white text-lg'>Saved locally for future use</span>}
+                {
+                    fileContent && !isSaved && (
+                        <button onClick={() => setIsSaved(true)}>Save file to local storage</button>
+                    )
+                }
             </div>
             {fileContent && <button onClick={() => clearFile()}>Clear current file</button>}
         </div>

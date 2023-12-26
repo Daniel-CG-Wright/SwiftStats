@@ -264,5 +264,18 @@ select option {
       transparent
     ),
     rgb(var(--background-end-rgb));
+    height: 100%;
+
+}
+
+.blue-background-page {
+  /* have a med-blue top and a black bottom */
+  background: linear-gradient(
+      to bottom,
+      rgb(33, 95, 95),
+      transparent
+    ),
+    rgb(var(--background-end-rgb));
+    height: 100%;
 
 }
