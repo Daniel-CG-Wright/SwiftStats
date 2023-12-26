@@ -5,7 +5,7 @@ import React from 'react';
 const HowToUsePage: React.FC = () => {
     return (
         <div className="px-2 py-4 blue-background-page">
-            <h1>How To Use SwiftStats</h1>
+            <h1>How To Use <span className="font-cursive text-4xl px-1 font-light">Stats Now</span></h1>
             <div className="text-section">
                 <h2>Step 1: Request your listening data</h2>
                 <p>
@@ -27,9 +27,9 @@ const HowToUsePage: React.FC = () => {
             <div className="text-section">
                 <h2>Step 3: Upload your data</h2>
                 <p>
-                    Now that you have your data, you can upload it to SwiftStats. Click the &quot;Choose File&quot; button and select the &quot;StreamingHistory0.json&quot;
+                    Now that you have your data, you can upload it to Stats Now. Click the &quot;Choose File&quot; button and select the &quot;StreamingHistory0.json&quot;
                     file. This is the main file that contains all of your listening data. Once you have selected this file, click the &quot;Upload&quot; button.
-                    SwiftStats will then process your data and display the results.
+                    Stats Now will then process your data and display the results.
                 </p>
             </div>
             <div className="text-section">

@@ -1,4 +1,4 @@
-This is the source code for SwiftStats, a custom spotify stats website, using Next.JS framework.
+This is the source code for Stats Now, a custom spotify stats website, using Next.JS framework.
 
 ## Getting Started
 

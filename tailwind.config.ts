@@ -17,6 +17,9 @@ const config: Config = {
         'dark': '#121212',
         'standard-green': '#1db954',
       },
+      fontFamily: {
+        cursive: ['var(--font-cursive)'],
+      },
     },
   },
   plugins: [],

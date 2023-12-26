@@ -34,8 +34,8 @@ const MenuBarComponent: React.FC = () => {
                     </li>
                 </div>
                 <li className="hidden md:flex items-center">
-                    <span className="font-bold text-4xl">SwiftStats</span>
-                    <Image src="/logo.png" alt="SwiftStats Logo" className="mr-2" width={80} height={80} />
+                    <span className="font-cursive text-5xl">Stats Now</span>
+                    <Image src="/logo.png" alt="Stats Now Logo" className="mr-2" width={100} height={100} />
                 </li>
             </ul>
         </nav>
