@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Stats Now',
-  description: 'Provides an instant analysis of your Spotify stats, in style. The best websites in life are free!',
+  description: 'Provides an instant analysis of your Spotify or YouTube Music stats, in style. The best websites in life are free!',
 }
 
 export default function RootLayout({
