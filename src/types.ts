@@ -63,3 +63,8 @@ export interface FileData {
     lastDate: string;
 }
 
+export interface ListeningDataByMonth {
+    month: string;
+    minutesListened: number;
+    timesStreamed: number;
+}
