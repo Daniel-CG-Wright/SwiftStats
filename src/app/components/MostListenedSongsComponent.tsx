@@ -66,14 +66,14 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                 <tbody className="overflow-auto max-h-screen">
                     {songsForPage.map((song, index) => (
                         <tr key={index} onClick={() => handleSongClick(song, index)} className="clickable-row">
-                            <td>{(index + 1) + (currentPage - 1) * itemsPerPage}</td>
-                            <td>{song.artist.name}</td>
-                            <td>{song.name}</td>
+                            <td style={{ height: 'auto' }}>{(index + 1) + (currentPage - 1) * itemsPerPage}</td>
+                            <td style={{ height: 'auto' }}>{song.artist.name}</td>
+                            <td style={{ height: 'auto' }}>{song.name}</td>
                             {
                                 fileData.site !== Site.YOUTUBE &&
-                                <td>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
+                                <td style={{ height: 'auto' }}>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
                             }
-                            <td>{song.timesStreamed}</td>
+                            <td style={{ height: 'auto' }}>{song.timesStreamed}</td>
                         </tr>
                     ))}
                 </tbody>

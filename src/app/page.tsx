@@ -15,8 +15,6 @@ const IndexPage = () => {
     const [selectedSection, setSelectedSection] = useState<number>(0);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
-    const [firstDate, setFirstDate] = useState<string>('');
-    const [lastDate, setLastDate] = useState<string>('');
     const [showFileUpload, setShowFileUpload] = useState<boolean>(false);
     const [fileData, setFileData] = useState<FileData>({
         site: Site.NONE,
@@ -107,7 +105,7 @@ const IndexPage = () => {
                                     <DateSelectComponent
                                     startDate={startDate} setStartDate={setStartDate}
                                     endDate={endDate} setEndDate={setEndDate}
-                                    firstDate={firstDate} lastDate={lastDate}
+                                    firstDate={fileData.firstDate} lastDate={fileData.lastDate}
                                     />
                                 </div>
                             )
