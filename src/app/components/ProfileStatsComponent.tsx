@@ -1,7 +1,7 @@
 // src\app\stats\components\ProfileStatsComponent.tsx
 
 import React from 'react';
-import { JSONSong, FileData } from '@/types';
+import { FileData } from '@/types';
 import { getDetailedData, getListeningTimeByMonth } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
@@ -34,7 +34,7 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData,
                 <tbody>
                     <tr><td>Unique Artists</td><td>{uniqueArtists}</td></tr>
                     <tr><td>Unique Tracks</td><td>{uniqueTracks}</td></tr>
-                    <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
+                    <DetailedInfoComponent site={fileData.site} timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
             <ListeningClockWrapperComponent fileData={fileData} criteria={{ artist: '', trackName: '' }} />

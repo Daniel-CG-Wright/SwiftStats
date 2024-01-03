@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { timeFormat } from '@/util/dateTimeFormat';
 import ArtistDetailsComponent from './ArtistDetailsComponent';
 import { getMostListenedArtists } from '@/util/analysisHelpers';
-import { Artist, FileData } from '@/types';
+import { Artist, FileData, Site } from '@/types';
 import PageChangerComponent from './PageChangerComponent';
 
 interface MostListenedArtistsComponentProps {
@@ -19,6 +19,8 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
 
     // Calculate the songs for the current page
     const artistsForPage = artists.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    const disclaimerText = fileData.site === Site.YOUTUBE ? 'Only artists with at least 1 stream are shown' : 'Only artists with at least 1 minute listened are shown';
 
     const handleArtistClick = (artist: Artist, index: number) => {
         // Save the current scroll position
@@ -42,7 +44,10 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
                     <tr>
                         <th>#</th>
                         <th>Artist</th>
-                        <th>Time Listened</th>
+                        {
+                            fileData.site !== Site.YOUTUBE &&
+                            <th>Time Listened</th>
+                        }
                         <th>Times Streamed</th>
                     </tr>
                 </thead>
@@ -51,14 +56,17 @@ const MostListenedArtistsComponent: React.FC<MostListenedArtistsComponentProps> 
                         <tr key={index} onClick={() => handleArtistClick(artist, index)} className="clickable-row">
                             <td>{index + 1}</td>
                             <td>{artist.name}</td>
-                            <td>{timeFormat(artist.minutesListened)} ({artist.minutesListened.toFixed(1)} minutes)</td>
+                            {
+                                fileData.site !== Site.YOUTUBE &&
+                                <td>{timeFormat(artist.minutesListened)} ({artist.minutesListened.toFixed(1)} minutes)</td>
+                            }
                             <td>{artist.timesStreamed}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             <PageChangerComponent currentPage={currentPage} setCurrentPage={setCurrentPage} numberPerPage={itemsPerPage} maxValue={artists.length} totalPages={Math.ceil(artists.length / itemsPerPage)} />
-            <label className="py-2 text-gray-400">Only artists with at least 1 minute listened are shown</label>
+            <label className="py-2 text-gray-400">{disclaimerText}</label>
         </div>
     );
 };

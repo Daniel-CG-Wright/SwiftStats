@@ -54,6 +54,7 @@ export interface QuantityCriteria {
 export enum Site {
     SPOTIFY = "Spotify",
     YOUTUBE = "YouTube Music",
+    NONE = "None",
 }
 export interface FileData {
     site: Site;

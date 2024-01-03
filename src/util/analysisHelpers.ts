@@ -3,9 +3,10 @@ import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCr
 /**
  * This function takes in the file string content and returns FileData
  * @param fileContent the string content of the file
+ * @param cutoffTime the cutoff time for the file (records with less than this time will be filtered out)
  * @returns FileData
  */
-export const getFileData = (fileContent: string): FileData => {
+export const getFileData = (fileContent: string, cutoffTime: number): FileData => {
     const parsedContent = JSON.parse(fileContent);
     // content was validated in the file upload component
     const site = parsedContent[0].header ? Site.YOUTUBE : Site.SPOTIFY;
@@ -14,7 +15,7 @@ export const getFileData = (fileContent: string): FileData => {
     if (site === Site.SPOTIFY) {
         data = parsedContent;
         // filter out songs with less than 5000 ms played
-        data = data.filter((record: JSONSong) => record.msPlayed > 5000);
+        data = data.filter((record: JSONSong) => record.msPlayed > cutoffTime);
     } else {
         data = parsedContent.map((record: { 
             title: string,

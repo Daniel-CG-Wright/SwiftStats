@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Song, FileData } from '@/types';
+import { Song, FileData, Site } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getListeningTimeByMonth, getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
@@ -71,7 +71,7 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileData, s
             
             <table>
                 <tbody>
-                    <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
+                    <DetailedInfoComponent site={fileData.site} timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
             <ListeningClockWrapperComponent fileData={fileData} criteria={{ artist: song.artist.name, trackName: song.name }} />

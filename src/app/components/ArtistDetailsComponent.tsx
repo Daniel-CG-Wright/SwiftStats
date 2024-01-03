@@ -56,7 +56,7 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileDat
             </div>
             <table>
                 <tbody>
-                    <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
+                    <DetailedInfoComponent site={fileData.site} timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
             <ListeningClockWrapperComponent fileData={fileData} criteria={{ artist: artist.name, trackName: '' }}/>

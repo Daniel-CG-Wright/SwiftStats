@@ -6,6 +6,8 @@ import MostListenedToSongsComponent from './components/MostListenedSongsComponen
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from './components/DateSelectComponent';
+import { FileData, Site } from '@/types';
+import { getFileData } from '@/util/analysisHelpers';
 
 
 const IndexPage = () => {
@@ -16,22 +18,18 @@ const IndexPage = () => {
     const [firstDate, setFirstDate] = useState<string>('');
     const [lastDate, setLastDate] = useState<string>('');
     const [showFileUpload, setShowFileUpload] = useState<boolean>(false);
+    const [fileData, setFileData] = useState<FileData>({
+        site: Site.NONE,
+        data: [],
+        firstDate: '',
+        lastDate: '',
+    });
 
     const cutoffTime = 5000; // 5000ms at least to count as a song listened to
 
     useEffect(() => {
         if (fileContent) {
-            // set the first and last dates
-            const parsedContent = JSON.parse(fileContent);
-            // set the first date to the first date in the file formatted from YYYY-MM-DD HH:SS to YYYY-MM-DD
-            setFirstDate(parsedContent[0].endTime.split(' ')[0]);
-            // set the last date to the last date in the file formatted from YYYY-MM-DD HH:SS to YYYY-MM-DD
-            setLastDate(parsedContent[parsedContent.length - 1].endTime.split(' ')[0]);
-            // filter out any songs that have less than 5000 ms played
-            const filteredContent = parsedContent.filter((song: any) => song.msPlayed >= cutoffTime);
-            // set the file content to the filtered content
-            setFileContent(JSON.stringify(filteredContent));
-            setShowFileUpload(false);
+            setFileData(getFileData(fileContent, cutoffTime));
         }
         else
         {
@@ -44,20 +42,17 @@ const IndexPage = () => {
     const sections = [
         {
             title: 'Profile Stats',
-            component: <ProfileStatsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate} />,
+            component: <ProfileStatsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
             hideDateSelect: false,
         },
         {
             title: 'Songs Ranking',
-            component: <MostListenedToSongsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate}/>,
+            component: <MostListenedToSongsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
             hideDateSelect: false,
         },
         {
             title: 'Artists Ranking',
-            component: <MostListenedArtistsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate}/>,
+            component: <MostListenedArtistsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
             hideDateSelect: false,
         },
 
