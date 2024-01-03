@@ -7,6 +7,7 @@ import MostListenedArtistsComponent from './components/MostListenedArtistsCompon
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from './components/DateSelectComponent';
 
+
 const IndexPage = () => {
     const [fileContent, setFileContent] = useState<string>('');
     const [selectedSection, setSelectedSection] = useState<number>(0);

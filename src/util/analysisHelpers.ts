@@ -1,6 +1,53 @@
-import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCriteria } from '../types';
+import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCriteria, FileData, Site } from '../types';
 
+/**
+ * This function takes in the file string content and returns FileData
+ * @param fileContent the string content of the file
+ * @returns FileData
+ */
+export const getFileData = (fileContent: string): FileData => {
+    const parsedContent = JSON.parse(fileContent);
+    // content was validated in the file upload component
+    const site = parsedContent[0].header ? Site.YOUTUBE : Site.SPOTIFY;
+    // convert the data to the JSONSong format - spotify can be used as is, youtube needs to be converted
+    let data: JSONSong[] = [];
+    if (site === Site.SPOTIFY) {
+        data = parsedContent;
+        // filter out songs with less than 5000 ms played
+        data = data.filter((record: JSONSong) => record.msPlayed > 5000);
+    } else {
+        data = parsedContent.map((record: { 
+            title: string,
+            titleUrl: string,
+            subtitles: { 
+                name: string,
+                url: string,
+                }[],
+            time: string
+            }) => ({
+                // convert time to YYYY-MM-DD format
+            endTime: record.time.split('T')[0],
+            artistName: record.subtitles[0].name,
+            trackName: record.title,
+            trackUrl: record.titleUrl,
+            artistUrl: record.subtitles[0].url
+        }));
+    }
 
+    // find the earliest and latest dates
+    let firstDate = data[0].endTime;
+    let lastDate = data[0].endTime;
+    data.forEach((record: { endTime: string; }) => {
+        if (record.endTime < firstDate) {
+            firstDate = record.endTime;
+        }
+        if (record.endTime > lastDate) {
+            lastDate = record.endTime;
+        }
+    });
+
+    return { site, data, lastDate, firstDate };
+}
 
 /**
  * This function takes in the file JSON content and returns a list of songs listened
@@ -11,9 +58,9 @@ import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCr
  * @returns a list of songs listened to in order of most listened to by ms listened
  * (see the Song interface for more details)
  */
-export const getMostSongsListenedTo = (fileContent: string, startDate: string, endDate: string, artists: Artist[]): Song[] => {
+export const getMostSongsListenedTo = (fileData: FileData, startDate: string, endDate: string, artists: Artist[]): Song[] => {
     const artistTrackSeparator = '¬sep¬';
-    const data = JSON.parse(fileContent);
+    const data = fileData.data;
 
     const playtimeMap = new Map<string, number>();
     const streamCountMap = new Map<string, number>();
@@ -57,14 +104,14 @@ export const getMostSongsListenedTo = (fileContent: string, startDate: string, e
  * @param fileContent - The contents of the listening history file.
  * @returns An array of objects with the artist name and the number of minutes listened
  */
-export const getMostListenedArtists = (fileContent: string, startDate: string, endDate: string): Artist[] => {
-    const data = JSON.parse(fileContent);
+export const getMostListenedArtists = (fileData: FileData, startDate: string, endDate: string): Artist[] => {
+    const data = fileData.data;
     const playtimeMap = new Map<string, number>();
     const timesStreamedMap = new Map<string, number>();
 
     // startDate and endDate are in the format YYYY-MM-DD
 
-    data.forEach((record: { artistName: string; msPlayed: number, endTime: number }) => {
+    data.forEach((record: { artistName: string; msPlayed: number, endTime: string }) => {
         // Compare the record's end time to the start and end dates (after converting the record's end time to YYYY-MM-DD)
         const recordTime = new Date(record.endTime).toISOString().split('T')[0];
 
@@ -96,8 +143,8 @@ export const getMostListenedArtists = (fileContent: string, startDate: string, e
  * @param year - The year to get the listening time for.
  * @returns An array of objects with the month and the number of minutes listened
  */
-export const getListeningTimeByMonth = (fileContent: string, criteria: QuantityCriteria, year: string): NumberByMonth[] => {
-    const data = JSON.parse(fileContent);
+export const getListeningTimeByMonth = (fileData: FileData, criteria: QuantityCriteria, year: string): NumberByMonth[] => {
+    const data = fileData.data;
 
     const listeningTimeByMonth = new Map<string, number>();
 
@@ -149,8 +196,8 @@ export const getListeningTimeByMonth = (fileContent: string, criteria: QuantityC
  * @returns an object containing the time listened in minutes, time streamed,
  * average time listened per stream, and an Averages object
  */
-export const getDetailedData = (fileContent: string, criteria: QuantityCriteria, startDate: string, endDate: string): { timeListened: number, timesStreamed: number, averageTimeListenedPerStream: number, averages: AverageListeningData } => {
-    const data = JSON.parse(fileContent);
+export const getDetailedData = (fileData: FileData, criteria: QuantityCriteria, startDate: string, endDate: string): { timeListened: number, timesStreamed: number, averageTimeListenedPerStream: number, averages: AverageListeningData } => {
+    const data = fileData.data;
     const songData = data.filter((record: { artistName: string; trackName: string; msPlayed: number; endTime: string; }) => {
         // Convert recordTime to YYYY-MM-DD format
         const recordTime = record.endTime.split(' ')[0];

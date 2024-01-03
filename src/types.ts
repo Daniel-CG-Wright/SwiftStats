@@ -13,11 +13,16 @@ export interface Song {
     position: number;
 }
 
+// designed to incorporate elements from spotify and youtube
 export interface JSONSong {
     endTime: string;
     artistName: string;
     trackName: string;
+    // spotify-exclusive, will be 0 if not spotify
     msPlayed: number;
+    // youtube-exclusive
+    trackUrl?: string;
+    artistUrl?: string;
 }
 
 export interface NumberByMonth {
@@ -45,3 +50,16 @@ export interface QuantityCriteria {
     artist: string;
     trackName: string;
 }
+
+export enum Site {
+    SPOTIFY = "Spotify",
+    YOUTUBE = "YouTube Music",
+}
+export interface FileData {
+    site: Site;
+    data: JSONSong[];
+    // these will be in the format YYYY-MM-DD
+    firstDate: string;
+    lastDate: string;
+}
+

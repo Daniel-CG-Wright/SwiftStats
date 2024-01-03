@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { getListeningTimeByMonth } from '@/util/analysisHelpers';
-import { QuantityCriteria } from '@/types';
+import { QuantityCriteria, FileData } from '@/types';
 import ListeningClockComponent from './ListeningClockComponent';
 
 interface ListeningClockWrapperComponentProps {
-    fileContent: string;
+    fileData: FileData;
     criteria: QuantityCriteria;
-    firstDate: string;
-    lastDate: string;
 }
 /**
  * This component displays the listening clock along with the year selector.
  */
-const ListeningClockWrapperComponent: React.FC<ListeningClockWrapperComponentProps> = ({ fileContent, criteria, firstDate, lastDate }) => {
+const ListeningClockWrapperComponent: React.FC<ListeningClockWrapperComponentProps> = ({ fileData, criteria }) => {
     const [year, setYear] = useState<string>(new Date().getFullYear().toString());
-    const data = getListeningTimeByMonth(fileContent, criteria, year);
+    const data = getListeningTimeByMonth(fileData, criteria, year);
 
     return (
         <div>
@@ -23,7 +21,7 @@ const ListeningClockWrapperComponent: React.FC<ListeningClockWrapperComponentPro
                 <div className="flex">
                     {
                         // create a button for each year
-                        Array.from({ length: Number(lastDate.split('-')[0]) - Number(firstDate.split('-')[0]) + 1 }, (_, i) => i + Number(firstDate.split('-')[0])).map(year => (
+                        Array.from({ length: Number(fileData.lastDate.split('-')[0]) - Number(fileData.firstDate.split('-')[0]) + 1 }, (_, i) => i + Number(fileData.firstDate.split('-')[0])).map(year => (
                             <button
                                 key={year}
                                 onClick={() => setYear(year.toString())}

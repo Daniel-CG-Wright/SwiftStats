@@ -1,17 +1,15 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import { Song } from '@/types';
+import { Song, FileData } from '@/types';
 import { timeFormat } from '@/util/dateTimeFormat';
 import SongDetailsComponent from './SongDetailsComponent';
 import { getMostSongsListenedTo, getMostListenedArtists } from '@/util/analysisHelpers';
 import PageChangerComponent from './PageChangerComponent';
 
 interface MostListenedToSongsComponentProps {
-    fileContent: string;
+    fileData: FileData;
     startDate: string;
     endDate: string;
-    firstDate: string;
-    lastDate: string;
 }
 
 /**
@@ -21,10 +19,10 @@ interface MostListenedToSongsComponentProps {
  * @param startDate the start date of the filter
  * @param endDate the end date of the filter
  */
-const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileContent, startDate, endDate, firstDate, lastDate }) => {
+const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileData, startDate, endDate }) => {
     // need the artists so that we can display their position
-    const artistsListenedTo = getMostListenedArtists(fileContent, startDate, endDate);
-    const songsListenedTo = getMostSongsListenedTo(fileContent, startDate, endDate, artistsListenedTo);
+    const artistsListenedTo = getMostListenedArtists(fileData, startDate, endDate);
+    const songsListenedTo = getMostSongsListenedTo(fileData, startDate, endDate, artistsListenedTo);
     const [selectedSong, setSelectedSong] = useState<Song | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 250;
@@ -44,7 +42,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
     if (selectedSong) {
         return (
             <div>
-                <SongDetailsComponent fileContent={fileContent} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate} firstDate={firstDate} lastDate={lastDate} />
+                <SongDetailsComponent fileData={fileData} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate} />
             </div>
         );
     }

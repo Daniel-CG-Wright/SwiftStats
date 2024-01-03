@@ -54,10 +54,20 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
             const parsedContent = JSON.parse(content);
             // weakly validate the file content by checking that the first record has the expected fields
             if (
-                parsedContent[0].endTime &&
-                parsedContent[0].artistName &&
-                parsedContent[0].trackName &&
-                parsedContent[0].msPlayed
+                (
+                    parsedContent[0].endTime &&
+                    parsedContent[0].artistName &&
+                    parsedContent[0].trackName &&
+                    parsedContent[0].msPlayed
+                ) ||
+                (
+                    // youtube music
+                    parsedContent[0].header &&
+                    parsedContent[0].title &&
+                    parsedContent[0].titleUrl &&
+                    parsedContent[0].subtitles &&
+                    parsedContent[0].time
+                )
             ) {
                 return true;
             }
