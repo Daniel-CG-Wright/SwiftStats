@@ -5,6 +5,7 @@ import { FileData } from '@/types';
 import { getDetailedData, getListeningTimeByMonth } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
+import { time } from 'console';
 
 interface ProfileStatsComponentProps {
     fileData: FileData;
@@ -26,6 +27,7 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData,
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { trackName: '', artist: '' }, startDate, endDate);
     const uniqueArtists = new Set(filteredData.map(record => record.artistName)).size;
     const uniqueTracks = new Set(filteredData.map(record => record.trackName)).size;
+    console.log(timeListened, timesStreamed, averageTimeListenedPerStream, averages);
 
     return (
         <div className="py-2 px-4 h-full w-full flex flex-grow flex-col">

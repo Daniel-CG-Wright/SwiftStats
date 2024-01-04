@@ -6,6 +6,7 @@ import MostListenedToSongsComponent from './components/MostListenedSongsComponen
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from './components/DateSelectComponent';
+import MostListenedAlbumsComponent from './components/MostListenedAlbumsComponent';
 import { FileData, Site, Song } from '@/types';
 import { getFileData } from '@/util/analysisHelpers';
 
@@ -16,6 +17,7 @@ const IndexPage = () => {
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
     const [showFileUpload, setShowFileUpload] = useState<boolean>(false);
+    const [sections, setSections] = useState<any[]>([]); // TODO: type this properly
     const [fileData, setFileData] = useState<FileData>({
         site: Site.NONE,
         data: [],
@@ -41,6 +43,35 @@ const IndexPage = () => {
                 setFileData(receivedFileData);
                 setStartDate(receivedFileData.firstDate);
                 setEndDate(receivedFileData.lastDate);
+                // we will have an array of sections corresponding to the different analysis sections we
+                // can display. The user clicks on the corresponding button.
+                let sections = [
+                    {
+                        title: 'Profile Stats',
+                        component: <ProfileStatsComponent fileData={receivedFileData} startDate={receivedFileData.firstDate} endDate={receivedFileData.lastDate} />,
+                        hideDateSelect: false,
+                    },
+                    {
+                        title: 'Songs Ranking',
+                        component: <MostListenedToSongsComponent fileData={receivedFileData} startDate={receivedFileData.firstDate} endDate={receivedFileData.lastDate} />,
+                        hideDateSelect: false,
+                    },
+                    {
+                        title: 'Artists Ranking',
+                        component: <MostListenedArtistsComponent fileData={receivedFileData} startDate={receivedFileData.firstDate} endDate={receivedFileData.lastDate} />,
+                        hideDateSelect: false,
+                    },
+                ];
+
+                if (receivedFileData.site === Site.SPOTIFY_EXTENDED) {
+                    sections.push({
+                        title: 'Albums Ranking',
+                        component: <MostListenedAlbumsComponent fileData={receivedFileData} startDate={receivedFileData.firstDate} endDate={receivedFileData.lastDate} />,
+                        hideDateSelect: false,
+                    });
+                }
+                setSections(sections);
+
             }
         }
         else
@@ -55,26 +86,7 @@ const IndexPage = () => {
         }
     }, [fileContent]);
 
-    // we will have an array of sections corresponding to the different analysis sections we
-    // can display. The user clicks on the corresponding button.
-    const sections = [
-        {
-            title: 'Profile Stats',
-            component: <ProfileStatsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
-            hideDateSelect: false,
-        },
-        {
-            title: 'Songs Ranking',
-            component: <MostListenedToSongsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
-            hideDateSelect: false,
-        },
-        {
-            title: 'Artists Ranking',
-            component: <MostListenedArtistsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
-            hideDateSelect: false,
-        },
-
-    ];
+    
 
     // other section ideas:
     /*
@@ -103,6 +115,9 @@ const IndexPage = () => {
                     fileData && fileData.data.length > 0 && (
                         <div className="px-4 py-2">
                             <h1>File Info</h1>
+                            {
+                                
+                            }
                             <div className="py-2">
                                 <p>Site: {fileData.site}</p>
                                 <p>Number of songs: {fileData.data.length}</p>
@@ -130,7 +145,8 @@ const IndexPage = () => {
                                     ))}
                                 </div>
                             </div>
-                            {!sections[selectedSection].hideDateSelect &&
+                            { sections[selectedSection] &&
+                            !sections[selectedSection].hideDateSelect &&
                             (
                                 <div className="py-4">
                                     <DateSelectComponent
@@ -142,7 +158,10 @@ const IndexPage = () => {
                             )
                             }
                         
-                            <div className="py-2">{sections[selectedSection].component}</div>
+                            {
+                                sections[selectedSection] &&
+                                <div className="py-2">{sections[selectedSection].component}</div>
+                            }
                         </div>
                     )
                     : (

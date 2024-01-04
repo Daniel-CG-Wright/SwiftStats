@@ -11,6 +11,15 @@ export interface Song {
     minutesListened: number;
     timesStreamed: number;
     position: number;
+    album?: Album;
+}
+
+export interface Album {
+    name: string;
+    artist: Artist;
+    minutesListened: number;
+    timesStreamed: number;
+    position: number;
 }
 
 // designed to incorporate elements from spotify and youtube, used to store JSON
@@ -21,6 +30,9 @@ export interface JSONSong {
     trackName: string;
     // spotify-exclusive, will be 0 if not spotify
     msPlayed: number;
+    // spotify-extended exclusive
+    trackUri?: string;
+    albumName?: string;
     // youtube-exclusive
     trackUrl?: string;
     artistUrl?: string;
@@ -49,12 +61,14 @@ export interface AverageListeningData {
 
 export interface QuantityCriteria {
     artist: string;
-    trackName: string;
+    trackName?: string;
+    albumName?: string;
 }
 
 export enum Site {
     SPOTIFY = "Spotify",
     YOUTUBE = "YouTube Music",
+    SPOTIFY_EXTENDED = "Spotify Extended",
     NONE = "None",
 }
 export interface FileData {
