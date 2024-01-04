@@ -51,8 +51,8 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
             }) => ({
                 // convert time to YYYY-MM-DD format
             endTime: record.time.split('T')[0],
-            artistName: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].name : "Unknown Artist",
-            trackName: record.title,
+            artistName: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].name.split(" - Topic")[0] : "Unknown Artist",
+            trackName: record.title.split("Watched ")[1],
             trackUrl: record.titleUrl,
             artistUrl: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].url : null,
             msPlayed: 0,
@@ -119,8 +119,7 @@ export const getMostSongsListenedTo = (fileData: FileData, startDate: string, en
         .sort((a, b) => b.minutesListened - a.minutesListened);
     }
     else if (fileData.site === Site.YOUTUBE) {
-        songsListenedTo = songsListenedTo.filter(song => song.timesStreamed > 1)
-        .sort((a, b) => b.timesStreamed - a.timesStreamed);
+        songsListenedTo = songsListenedTo.sort((a, b) => b.timesStreamed - a.timesStreamed);
     }
 
     // Add position to each song
@@ -163,8 +162,7 @@ export const getMostListenedArtists = (fileData: FileData, startDate: string, en
         .sort((a, b) => b.minutesListened - a.minutesListened);
     }
     else if (fileData.site === Site.YOUTUBE) {
-        artists = artists.filter(artist => artist.timesStreamed > 1)
-        .sort((a, b) => b.timesStreamed - a.timesStreamed);
+        artists = artists.sort((a, b) => b.timesStreamed - a.timesStreamed);
     }
 
     artists.forEach((artist, index) => {
