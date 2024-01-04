@@ -3,17 +3,17 @@ import React, { useState } from 'react'
 import PageChangerComponent from './PageChangerComponent';
 
 interface MostListenedToTableComponentProps {
-    setSelectedRowIndex: (index: number) => void;
+    setCurrentPage: (page: number) => void;
+    currentPage: number;
     disclaimerText: string;
-    detailsComponent: JSX.Element;
     tableHeaders: string[];
     data: any[];
     renderRow: (row: any, index: number) => JSX.Element;
+    itemsPerPage: number;
 }
 
 /**
  * This component takes in the file JSON content and displays a list of table data as desired
- * @param setSelectedRowData the function to set the selected row data (e.g. setSelectedRowData={setSelectedSong})
  * @param disclaimerText the text to display at the bottom of the table
  * @param tableHeaders the headers of the table
  * @param data the data to display in the table
@@ -30,9 +30,7 @@ interface MostListenedToTableComponentProps {
     )}
     )
  */
-const MostListenedToTableComponent: React.FC<MostListenedToTableComponentProps> = ({ setSelectedRowIndex, disclaimerText, tableHeaders, data, renderRow }) => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 250;
+const StandardTableComponent: React.FC<MostListenedToTableComponentProps> = ({ setCurrentPage, currentPage, disclaimerText, tableHeaders, data, renderRow, itemsPerPage }) => {
 
     // Calculate the data for the current page
     const dataForPage = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -60,4 +58,4 @@ const MostListenedToTableComponent: React.FC<MostListenedToTableComponentProps> 
     );
 }
     
-export default MostListenedToTableComponent;
+export default StandardTableComponent;

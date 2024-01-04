@@ -17,6 +17,7 @@ const IndexPage = () => {
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
     const [showFileUpload, setShowFileUpload] = useState<boolean>(false);
+    const [sections, setSections] = useState<any[]>([]); // TODO: type this properly
     const [fileData, setFileData] = useState<FileData>({
         site: Site.NONE,
         data: [],
@@ -25,24 +26,7 @@ const IndexPage = () => {
     });
 
     const cutoffTime = 5000; // 5000ms at least to count as a song listened to
-    let sections = [
-        {
-            title: 'Profile Stats',
-            component: <ProfileStatsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
-            hideDateSelect: false,
-        },
-        {
-            title: 'Songs Ranking',
-            component: <MostListenedToSongsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
-            hideDateSelect: false,
-        },
-        {
-            title: 'Artists Ranking',
-            component: <MostListenedArtistsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
-            hideDateSelect: false,
-        },
 
-    ];
     useEffect(() => {
         if (fileContent) {
             const receivedFileData = getFileData(fileContent, cutoffTime);
@@ -61,20 +45,32 @@ const IndexPage = () => {
                 setEndDate(receivedFileData.lastDate);
                 // we will have an array of sections corresponding to the different analysis sections we
                 // can display. The user clicks on the corresponding button.
-                
+                let sections = [
+                    {
+                        title: 'Profile Stats',
+                        component: <ProfileStatsComponent fileData={receivedFileData} startDate={receivedFileData.firstDate} endDate={receivedFileData.lastDate} />,
+                        hideDateSelect: false,
+                    },
+                    {
+                        title: 'Songs Ranking',
+                        component: <MostListenedToSongsComponent fileData={receivedFileData} startDate={receivedFileData.firstDate} endDate={receivedFileData.lastDate} />,
+                        hideDateSelect: false,
+                    },
+                    {
+                        title: 'Artists Ranking',
+                        component: <MostListenedArtistsComponent fileData={receivedFileData} startDate={receivedFileData.firstDate} endDate={receivedFileData.lastDate} />,
+                        hideDateSelect: false,
+                    },
+                ];
 
-                if (fileData.site === Site.SPOTIFY_EXTENDED)
-                {
+                if (receivedFileData.site === Site.SPOTIFY_EXTENDED) {
                     sections.push({
                         title: 'Albums Ranking',
-                        component: <MostListenedAlbumsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
+                        component: <MostListenedAlbumsComponent fileData={receivedFileData} startDate={receivedFileData.firstDate} endDate={receivedFileData.lastDate} />,
                         hideDateSelect: false,
                     });
                 }
-                else if (sections.length === 4)
-                {
-                    sections.pop();
-                }
+                setSections(sections);
 
             }
         }
@@ -149,7 +145,8 @@ const IndexPage = () => {
                                     ))}
                                 </div>
                             </div>
-                            {!sections[selectedSection].hideDateSelect &&
+                            { sections[selectedSection] &&
+                            !sections[selectedSection].hideDateSelect &&
                             (
                                 <div className="py-4">
                                     <DateSelectComponent
@@ -161,7 +158,10 @@ const IndexPage = () => {
                             )
                             }
                         
-                            <div className="py-2">{sections[selectedSection].component}</div>
+                            {
+                                sections[selectedSection] &&
+                                <div className="py-2">{sections[selectedSection].component}</div>
+                            }
                         </div>
                     )
                     : (
