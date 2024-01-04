@@ -1,24 +1,22 @@
 import React, { useEffect, useRef } from 'react';
-import { Artist } from '@/types';
+import { Artist, FileData } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 
 interface ArtistDetailsComponentProps {
-    fileContent: string;
+    fileData: FileData;
     artist: Artist;
     startDate: string;
     endDate: string;
-    firstDate: string;
-    lastDate: string;
     onBack: () => void;
 }
 
 /**
  * This component displays details of a specific artist, including the listening clock
  */
-const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileContent, artist, startDate, endDate, firstDate, lastDate, onBack }) => {
-    const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { artist: artist.name, trackName: '' }, startDate, endDate);
+const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileData, artist, startDate, endDate, onBack }) => {
+    const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { artist: artist.name, trackName: '' }, startDate, endDate);
     const backButtonRef = useRef<HTMLButtonElement>(null);
     useEffect(() => {
         if (backButtonRef.current) {
@@ -58,10 +56,10 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileCon
             </div>
             <table>
                 <tbody>
-                    <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
+                    <DetailedInfoComponent site={fileData.site} timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
-            <ListeningClockWrapperComponent fileContent={fileContent} criteria={{ artist: artist.name, trackName: '' }} firstDate={firstDate} lastDate={lastDate} />
+            <ListeningClockWrapperComponent fileData={fileData} criteria={{ artist: artist.name, trackName: '' }}/>
         </div>
     );
 };

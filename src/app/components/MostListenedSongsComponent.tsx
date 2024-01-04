@@ -1,17 +1,15 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import { Song } from '@/types';
+import { Song, FileData, Site } from '@/types';
 import { timeFormat } from '@/util/dateTimeFormat';
 import SongDetailsComponent from './SongDetailsComponent';
 import { getMostSongsListenedTo, getMostListenedArtists } from '@/util/analysisHelpers';
 import PageChangerComponent from './PageChangerComponent';
 
 interface MostListenedToSongsComponentProps {
-    fileContent: string;
+    fileData: FileData;
     startDate: string;
     endDate: string;
-    firstDate: string;
-    lastDate: string;
 }
 
 /**
@@ -21,10 +19,10 @@ interface MostListenedToSongsComponentProps {
  * @param startDate the start date of the filter
  * @param endDate the end date of the filter
  */
-const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileContent, startDate, endDate, firstDate, lastDate }) => {
+const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileData, startDate, endDate }) => {
     // need the artists so that we can display their position
-    const artistsListenedTo = getMostListenedArtists(fileContent, startDate, endDate);
-    const songsListenedTo = getMostSongsListenedTo(fileContent, startDate, endDate, artistsListenedTo);
+    const artistsListenedTo = getMostListenedArtists(fileData, startDate, endDate);
+    const songsListenedTo = getMostSongsListenedTo(fileData, startDate, endDate, artistsListenedTo);
     const [selectedSong, setSelectedSong] = useState<Song | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 250;
@@ -32,6 +30,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
     // Calculate the songs for the current page
     const songsForPage = songsListenedTo.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+    const disclaimerText = fileData.site === Site.YOUTUBE ? 'Only songs with at least 1 stream are shown' : 'Only songs with at least 1 minute listened are shown';
 
     const handleSongClick = (song: Song, index: number) => {
         // Save the current scroll position
@@ -44,7 +43,7 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
     if (selectedSong) {
         return (
             <div>
-                <SongDetailsComponent fileContent={fileContent} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate} firstDate={firstDate} lastDate={lastDate} />
+                <SongDetailsComponent fileData={fileData} song={selectedSong} onBack={() => setSelectedSong(null)} startDate={startDate} endDate={endDate} />
             </div>
         );
     }
@@ -60,24 +59,27 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                         <th>#</th>
                         <th>Artist</th>
                         <th>Song</th>
-                        <th>Time Listened</th>
+                        { fileData.site !== Site.YOUTUBE && <th>Time Listened</th> }
                         <th>Times Streamed</th>
                     </tr>
                 </thead>
                 <tbody className="overflow-auto max-h-screen">
                     {songsForPage.map((song, index) => (
                         <tr key={index} onClick={() => handleSongClick(song, index)} className="clickable-row">
-                            <td>{(index + 1) + (currentPage - 1) * itemsPerPage}</td>
-                            <td>{song.artist.name}</td>
-                            <td>{song.name}</td>
-                            <td>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
-                            <td>{song.timesStreamed}</td>
+                            <td style={{ height: 'auto' }}>{(index + 1) + (currentPage - 1) * itemsPerPage}</td>
+                            <td style={{ height: 'auto' }}>{song.artist.name}</td>
+                            <td style={{ height: 'auto' }}>{song.name}</td>
+                            {
+                                fileData.site !== Site.YOUTUBE &&
+                                <td style={{ height: 'auto' }}>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
+                            }
+                            <td style={{ height: 'auto' }}>{song.timesStreamed}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             <PageChangerComponent currentPage={currentPage} setCurrentPage={setCurrentPage} numberPerPage={itemsPerPage} maxValue={songsListenedTo.length} totalPages={Math.ceil(songsListenedTo.length / itemsPerPage)} />
-            <label className="py-2 text-gray-400">Only songs with at least 1 minute listened are shown</label>
+            <label className="py-2 text-gray-400">{disclaimerText}</label>
         </div>
     );
 }

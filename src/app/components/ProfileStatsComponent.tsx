@@ -1,24 +1,21 @@
 // src\app\stats\components\ProfileStatsComponent.tsx
 
 import React from 'react';
-import { JSONSong } from '@/types';
+import { FileData } from '@/types';
 import { getDetailedData, getListeningTimeByMonth } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 
 interface ProfileStatsComponentProps {
-    fileContent: string;
+    fileData: FileData;
     startDate: string;
     endDate: string;
-    firstDate: string;
-    lastDate: string;
 }
 
-const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileContent, startDate, endDate, firstDate, lastDate }) => {
+const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData, startDate, endDate }) => {
 
-    // Parse the file content
-    const data = JSON.parse(fileContent) as JSONSong[];
-
+    const data = fileData.data;
+    
     // Filter the data based on the selected start and end time
     const filteredData = data.filter(record => 
         (!startDate || record.endTime.split(' ')[0] >= startDate) && 
@@ -26,7 +23,7 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileConte
     );
 
     // Calculate the statistics
-    const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { trackName: '', artist: '' }, startDate, endDate);
+    const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { trackName: '', artist: '' }, startDate, endDate);
     const uniqueArtists = new Set(filteredData.map(record => record.artistName)).size;
     const uniqueTracks = new Set(filteredData.map(record => record.trackName)).size;
 
@@ -37,10 +34,10 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileConte
                 <tbody>
                     <tr><td>Unique Artists</td><td>{uniqueArtists}</td></tr>
                     <tr><td>Unique Tracks</td><td>{uniqueTracks}</td></tr>
-                    <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
+                    <DetailedInfoComponent site={fileData.site} timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
-            <ListeningClockWrapperComponent fileContent={fileContent} criteria={{ artist: '', trackName: '' }} firstDate={firstDate} lastDate={lastDate} />
+            <ListeningClockWrapperComponent fileData={fileData} criteria={{ artist: '', trackName: '' }} />
         </div>
     );
 }

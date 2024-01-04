@@ -13,11 +13,17 @@ export interface Song {
     position: number;
 }
 
+// designed to incorporate elements from spotify and youtube, used to store JSON
+// data in FileData
 export interface JSONSong {
     endTime: string;
     artistName: string;
     trackName: string;
+    // spotify-exclusive, will be 0 if not spotify
     msPlayed: number;
+    // youtube-exclusive
+    trackUrl?: string;
+    artistUrl?: string;
 }
 
 export interface NumberByMonth {
@@ -44,4 +50,23 @@ export interface AverageListeningData {
 export interface QuantityCriteria {
     artist: string;
     trackName: string;
+}
+
+export enum Site {
+    SPOTIFY = "Spotify",
+    YOUTUBE = "YouTube Music",
+    NONE = "None",
+}
+export interface FileData {
+    site: Site;
+    data: JSONSong[];
+    // these will be in the format YYYY-MM-DD
+    firstDate: string;
+    lastDate: string;
+}
+
+export interface ListeningDataByMonth {
+    month: string;
+    minutesListened: number;
+    timesStreamed: number;
 }

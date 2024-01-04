@@ -1,16 +1,14 @@
 import React, { useRef, useEffect } from 'react';
-import { Song } from '@/types';
+import { Song, FileData, Site } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getListeningTimeByMonth, getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 
 interface SongDetailsComponentProps {
-    fileContent: string;
+    fileData: FileData;
     song: Song;
     startDate: string;
     endDate: string;
-    firstDate: string;
-    lastDate: string;
     onBack: () => void;
 }
 
@@ -19,7 +17,7 @@ interface SongDetailsComponentProps {
 /**
  * This component displays details of a specific song, including the listening clock
  */
-const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent, song, startDate, endDate, firstDate, lastDate, onBack }) => {
+const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileData, song, startDate, endDate, onBack }) => {
     // Render song details and listening clock, listening clock will just use this year for now
     // We want to display the song name, artist, time listened, times streamed, average time listened per stream
     // in the same format as the profile stats page.
@@ -57,7 +55,7 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent
 
     
 
-    const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileContent, { trackName: song.name, artist: song.artist.name }, startDate, endDate);
+    const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { trackName: song.name, artist: song.artist.name }, startDate, endDate);
 
     return (
         <div className="px-4">
@@ -73,10 +71,10 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileContent
             
             <table>
                 <tbody>
-                    <DetailedInfoComponent timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
+                    <DetailedInfoComponent site={fileData.site} timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
                 </tbody>
             </table>
-            <ListeningClockWrapperComponent fileContent={fileContent} criteria={{ artist: song.artist.name, trackName: song.name }} firstDate={firstDate} lastDate={lastDate} />
+            <ListeningClockWrapperComponent fileData={fileData} criteria={{ artist: song.artist.name, trackName: song.name }} />
         </div>
     );
 };

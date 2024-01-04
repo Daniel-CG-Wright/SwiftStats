@@ -6,35 +6,52 @@ import MostListenedToSongsComponent from './components/MostListenedSongsComponen
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from './components/DateSelectComponent';
+import { FileData, Site, Song } from '@/types';
+import { getFileData } from '@/util/analysisHelpers';
+
 
 const IndexPage = () => {
     const [fileContent, setFileContent] = useState<string>('');
     const [selectedSection, setSelectedSection] = useState<number>(0);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
-    const [firstDate, setFirstDate] = useState<string>('');
-    const [lastDate, setLastDate] = useState<string>('');
     const [showFileUpload, setShowFileUpload] = useState<boolean>(false);
+    const [fileData, setFileData] = useState<FileData>({
+        site: Site.NONE,
+        data: [],
+        firstDate: '',
+        lastDate: '',
+    });
 
     const cutoffTime = 5000; // 5000ms at least to count as a song listened to
 
     useEffect(() => {
         if (fileContent) {
-            // set the first and last dates
-            const parsedContent = JSON.parse(fileContent);
-            // set the first date to the first date in the file formatted from YYYY-MM-DD HH:SS to YYYY-MM-DD
-            setFirstDate(parsedContent[0].endTime.split(' ')[0]);
-            // set the last date to the last date in the file formatted from YYYY-MM-DD HH:SS to YYYY-MM-DD
-            setLastDate(parsedContent[parsedContent.length - 1].endTime.split(' ')[0]);
-            // filter out any songs that have less than 5000 ms played
-            const filteredContent = parsedContent.filter((song: any) => song.msPlayed >= cutoffTime);
-            // set the file content to the filtered content
-            setFileContent(JSON.stringify(filteredContent));
-            setShowFileUpload(false);
+            const receivedFileData = getFileData(fileContent, cutoffTime);
+            // if the file data is an empty object then the file is invalid
+            if (receivedFileData.site === Site.NONE) {
+                setFileContent('');
+                // show an error message
+                alert('Invalid file content - ensure you are uploading valid Spotify or Youtube Music data');
+                // clear local storage
+                localStorage.removeItem('uploadedFile');
+            }
+            else
+            {
+                setFileData(receivedFileData);
+                setStartDate(receivedFileData.firstDate);
+                setEndDate(receivedFileData.lastDate);
+            }
         }
         else
         {
             setShowFileUpload(true);
+            setFileData({
+                site: Site.NONE,
+                data: [],
+                firstDate: '',
+                lastDate: '',
+            })
         }
     }, [fileContent]);
 
@@ -43,20 +60,17 @@ const IndexPage = () => {
     const sections = [
         {
             title: 'Profile Stats',
-            component: <ProfileStatsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate} />,
+            component: <ProfileStatsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
             hideDateSelect: false,
         },
         {
             title: 'Songs Ranking',
-            component: <MostListenedToSongsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate}/>,
+            component: <MostListenedToSongsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
             hideDateSelect: false,
         },
         {
             title: 'Artists Ranking',
-            component: <MostListenedArtistsComponent fileContent={fileContent} startDate={startDate} endDate={endDate}
-                firstDate={firstDate} lastDate={lastDate}/>,
+            component: <MostListenedArtistsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
             hideDateSelect: false,
         },
 
@@ -64,8 +78,6 @@ const IndexPage = () => {
 
     // other section ideas:
     /*
-    Listening clock for indivdual songs (click on a song and see the listening clock for that song)
-    Other stats for indivdual songs (click on a song and see the stats for that song)
     Comparison section (compare 2 time periods such as 2020 vs 2021)
     Top songs for each month (could be on the listening clock)
     */
@@ -87,6 +99,19 @@ const IndexPage = () => {
                         setFileContent={setFileContent}
                     />
                 </div>
+                {
+                    fileData && fileData.data.length > 0 && (
+                        <div className="px-4 py-2">
+                            <h1>File Info</h1>
+                            <div className="py-2">
+                                <p>Site: {fileData.site}</p>
+                                <p>Number of songs: {fileData.data.length}</p>
+                                <p>First date: {fileData.firstDate}</p>
+                                <p>Last date: {fileData.lastDate}</p>
+                            </div>
+                        </div>
+                    )
+                }
                 <div className="py-4 mt-2">
                     {fileContent ? (
                         <div>
@@ -111,7 +136,7 @@ const IndexPage = () => {
                                     <DateSelectComponent
                                     startDate={startDate} setStartDate={setStartDate}
                                     endDate={endDate} setEndDate={setEndDate}
-                                    firstDate={firstDate} lastDate={lastDate}
+                                    firstDate={fileData.firstDate} lastDate={fileData.lastDate}
                                     />
                                 </div>
                             )

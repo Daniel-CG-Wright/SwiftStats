@@ -2,16 +2,27 @@
 
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { dateFormat } from '@/util/dateTimeFormat';
-import { JSONSong } from '@/types';
+import { JSONSong, Site } from '@/types';
+import { getFileSite } from '@/util/analysisHelpers';
 
 interface Props {
     fileContent: string;
     setFileContent: (fileContent: string) => void;
 }
+const mergeFileContents = (fileContents: any[]): any[] => {
+    // merge the file contents into one array
+    let mergedData: any[] = [];
+    fileContents.forEach((fileContent) => {
+        mergedData = mergedData.concat(fileContent);
+    });
+    // remove duplicates which have same data
+    // @ts-ignore
+    const uniqueData = Array.from(new Set(mergedData.map(JSON.stringify))).map(JSON.parse);
+    return uniqueData;
+}
 
 const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) => {
     const [isSaved, setIsSaved] = useState(false);
-    const [latestStreamedTrack, setLatestStreamedTrack] = useState<JSONSong | null>(null);
 
 
     useEffect(() => {
@@ -21,43 +32,64 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
             setFileContent(savedFileContent);
             setIsSaved(true);
             // set the latest streamed track
-            const parsedContent = JSON.parse(savedFileContent);
-            setLatestStreamedTrack(parsedContent[parsedContent.length - 1]);
-        }
+            const parsedContent = JSON.parse(savedFileContent);        }
     }, []);
 
 
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files ? event.target.files[0] : null;
-        if (file) {
-            // loads the file and if the file is loaded, set the file content
-            const reader = new FileReader();
-            reader.onload = (e: ProgressEvent<FileReader>) => {
-                if (e.target?.result) {
-                    const content = e.target.result as string;
-                    if (!validateFileContent(content)) {
-                        alert('Invalid file content - ensure you are uploading a Spotify ListeningData JSON file');
-                        return;
-                    }
-                    setFileContent(content);
-                    const parsedContent = JSON.parse(content);
-                    setLatestStreamedTrack(parsedContent[parsedContent.length - 1]);
-                    localStorage.setItem('uploadedFile', content);
-                    setIsSaved(true);
-                }
-            };
-            reader.readAsText(file);
+    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files) {
+            const filePromises = Array.from(files).map((file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e: ProgressEvent<FileReader>) => {
+                        if (e.target?.result) {
+                            const content = e.target.result as string;
+                            const parsedContent = JSON.parse(content);
+                            if (!validateFileContent(parsedContent)) {
+                                reject('Invalid file content - ensure you are uploading valid Spotify or Youtube Music data');
+                            } else {
+                                resolve(parsedContent);
+                            }
+                        }
+                    };
+                    reader.readAsText(file);
+                });
+            });
+
+            try {
+                const fileContents = await Promise.all(filePromises);
+                const mergedData = mergeFileContents(fileContents);
+                const mergedContent = JSON.stringify(mergedData);
+                setFileContent(mergedContent);
+                localStorage.setItem('uploadedFile', mergedContent);
+                setIsSaved(true);
+            }
+            catch (error) {
+                alert(error);
+            }
         }
     };
-    const validateFileContent = (content: string): boolean => {
+
+    
+    const validateFileContent = (parsedContent: any): boolean => {
         try {
-            const parsedContent = JSON.parse(content);
             // weakly validate the file content by checking that the first record has the expected fields
             if (
-                parsedContent[0].endTime &&
-                parsedContent[0].artistName &&
-                parsedContent[0].trackName &&
-                parsedContent[0].msPlayed
+                (
+                    parsedContent[0].endTime &&
+                    parsedContent[0].artistName &&
+                    parsedContent[0].trackName &&
+                    parsedContent[0].msPlayed
+                ) ||
+                (
+                    // youtube music
+                    parsedContent[0].header &&
+                    parsedContent[0].title &&
+                    parsedContent[0].titleUrl &&
+                    parsedContent[0].subtitles &&
+                    parsedContent[0].time
+                )
             ) {
                 return true;
             }
@@ -70,7 +102,6 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
     const clearFile = () => {
         setFileContent('');
         setIsSaved(false);
-        setLatestStreamedTrack(null);
         // reset the file input
         const fileInput = document.getElementById('file-input') as HTMLInputElement;
         fileInput.value = '';
@@ -84,24 +115,16 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
     return (
         <div>
             <div className="py-1">
-                <input type="file" className="file-input" id="file-input" accept=".json" onChange={handleFileChange} />
+                <input type="file" className="file-input" id="file-input" accept=".json" onChange={handleFileChange} multiple />
                 <label htmlFor="file-input" className="file-input-label">Choose file</label><span className="px-2">(upload StreamingHistory0.json)</span>
-                {latestStreamedTrack && (
-                <div>
-                    <label>
-                        Latest streamed track: {latestStreamedTrack.artistName} - {latestStreamedTrack.trackName} at {dateFormat(latestStreamedTrack.endTime)}
-                    </label>
-                </div>
-                )
-                }
             </div>
             <div className="py-1">
                 {fileContent && isSaved && (
-                    <button onClick={deleteSavedFile}>Remove file from local storage</button>
+                    <button onClick={deleteSavedFile}>Remove data from local storage</button>
                 )}
                 {
                     fileContent && !isSaved && (
-                        <button onClick={() => setIsSaved(true)}>Save file to local storage</button>
+                        <button onClick={() => setIsSaved(true)}>Save data to local storage</button>
                     )
                 }
             </div>
