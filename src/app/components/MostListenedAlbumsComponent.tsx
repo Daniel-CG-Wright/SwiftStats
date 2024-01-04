@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FileData, Album, Site } from '../../types';
 import { getMostListenedArtists, getMostListenedAlbums } from '../../util/analysisHelpers';
 import StandardTableComponent from './StandardTableComponent';
+import AlbumDetailsComponent from './AlbumDetailsComponent';
 
 interface MostListenedAlbumsComponentProps {
     fileData: FileData;
@@ -27,7 +28,11 @@ const MostListenedAlbumsComponent: React.FC<MostListenedAlbumsComponentProps> = 
     };
 
     if (selectedAlbum) {
-        return <div>TODO</div>;
+        return (
+            <div>
+                <AlbumDetailsComponent fileData={fileData} album={selectedAlbum} onBack={() => setSelectedAlbum(null)} startDate={startDate} endDate={endDate} />
+            </div>
+        )
     }
 
     const renderRow = (album: Album, index: number) => (

@@ -61,7 +61,8 @@ export interface AverageListeningData {
 
 export interface QuantityCriteria {
     artist: string;
-    trackName: string;
+    trackName?: string;
+    albumName?: string;
 }
 
 export enum Site {

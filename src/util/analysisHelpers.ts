@@ -276,6 +276,23 @@ export const getMostListenedAlbums = (fileData: FileData, startDate: string, end
 };
 
 /**
+ * This gets whether or not a record is meeting quantity criteria
+ * @param record the record to check
+ * @param criteria the criteria to check against
+ * @returns whether or not the record is meeting quantity criteria
+ */
+const meetsQuantityCriteria = (record: JSONSong, criteria: QuantityCriteria): boolean => {
+    return (
+        (criteria.artist != '' && record.artistName === criteria.artist &&
+        (!criteria.trackName || record.trackName === criteria.trackName) &&
+        (!criteria.albumName || (record.albumName || '') === criteria.albumName))
+        ||
+        // artist will be specified for tracks or albums to avoid duplicates from different artists
+        (criteria.artist === '' && (!criteria.trackName || criteria.trackName === '') && (!criteria.albumName || criteria.albumName === ''))
+    );
+}
+
+/**
  * This function gets the listening time by month for an artist. Will do streams instead of minutes listened for youtube
  * @param fileContent - The contents of the listening history file.
  * @param criteria - The criteria to filter the data by. If the artist is not specified, all artists will be included.
@@ -299,10 +316,7 @@ export const getListeningTimeByMonth = (fileData: FileData, criteria: QuantityCr
         // Only process records within the date range
         if (recordTime >= startDate && recordTime <= endDate) {
             const key = record.endTime.split('-')[1];
-            if (
-                (criteria.artist != '' && record.artistName === criteria.artist && (!criteria.trackName || record.trackName === criteria.trackName))
-                || criteria.artist === ''
-                ) {
+            if (meetsQuantityCriteria(record, criteria)) {
                 const currentData = dataPerMonth.get(key) || { minutesListened: 0, timesStreamed: 0 };
                 dataPerMonth.set(key, {
                     minutesListened: currentData.minutesListened + (record.msPlayed / 60000),
@@ -343,23 +357,22 @@ export const getListeningTimeByMonth = (fileData: FileData, criteria: QuantityCr
  */
 export const getDetailedData = (fileData: FileData, criteria: QuantityCriteria, startDate: string, endDate: string): { timeListened: number, timesStreamed: number, averageTimeListenedPerStream: number, averages: AverageListeningData } => {
     const data = fileData.data;
-    const songData = data.filter((record: { artistName: string; trackName: string; msPlayed: number; endTime: string; }) => {
+    console.log(criteria);
+    const outputData = data.filter((record: JSONSong) => {
         // Only process records within the date range
         if (record.endTime >= startDate && record.endTime <= endDate) {
-            return (
-                (criteria.artist != '' && record.artistName === criteria.artist && (!criteria.trackName || record.trackName === criteria.trackName))
-                || criteria.artist === ''
-            );
+            return (meetsQuantityCriteria(record, criteria));
         }
         return false;
     });
+
     
     // get the number of days in the date range, ensuring both dates are inclusive
     const dateRange = new Date(endDate).getTime() - new Date(startDate).getTime();
     const days = dateRange / (1000 * 3600 * 24) + 1;
 
-    const timeListened = songData.reduce((accumulator: number, currentValue: { msPlayed: number; }) => accumulator + currentValue.msPlayed, 0) / 60000;
-    const timesStreamed = songData.length;
+    const timeListened = outputData.reduce((accumulator: number, currentValue: { msPlayed: number; }) => accumulator + currentValue.msPlayed, 0) / 60000;
+    const timesStreamed = outputData.length;
     const averageTimeListenedPerStream = timeListened / timesStreamed;
     const averages = {
         Daily: {
