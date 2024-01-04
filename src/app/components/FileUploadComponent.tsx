@@ -46,11 +46,7 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
                         if (e.target?.result) {
                             const content = e.target.result as string;
                             const parsedContent = JSON.parse(content);
-                            if (!validateFileContent(parsedContent)) {
-                                reject('Invalid file content - ensure you are uploading valid Spotify or Youtube Music data');
-                            } else {
-                                resolve(parsedContent);
-                            }
+                            resolve(parsedContent);
                         }
                     };
                     reader.readAsText(file);
@@ -69,34 +65,6 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
                 alert(error);
             }
         }
-    };
-
-    
-    const validateFileContent = (parsedContent: any): boolean => {
-        try {
-            // weakly validate the file content by checking that the first record has the expected fields
-            if (
-                (
-                    parsedContent[0].endTime &&
-                    parsedContent[0].artistName &&
-                    parsedContent[0].trackName &&
-                    parsedContent[0].msPlayed
-                ) ||
-                (
-                    // youtube music
-                    parsedContent[0].header &&
-                    parsedContent[0].title &&
-                    parsedContent[0].titleUrl &&
-                    parsedContent[0].subtitles &&
-                    parsedContent[0].time
-                )
-            ) {
-                return true;
-            }
-        } catch (error) {
-            return false;
-        }
-        return false;
     };
 
     const clearFile = () => {

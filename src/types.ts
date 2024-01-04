@@ -21,6 +21,9 @@ export interface JSONSong {
     trackName: string;
     // spotify-exclusive, will be 0 if not spotify
     msPlayed: number;
+    // spotify-extended exclusive
+    trackUri?: string;
+    albumName?: string;
     // youtube-exclusive
     trackUrl?: string;
     artistUrl?: string;

@@ -1,8 +1,9 @@
 import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCriteria, FileData, Site, ListeningDataByMonth } from '../types';
 
-export const getFileSite = (parsedFile: JSONSong[]): Site => {
+export const getFileSite = (parsedFile: any[]): Site => {
     try {
-        if (parsedFile[0].artistName) {
+        // ts is on extended spotify files
+        if (parsedFile[0].artistName || parsedFile[0].ts) {
             return Site.SPOTIFY;
         }
         return Site.YOUTUBE;
@@ -25,40 +26,70 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
     const site = getFileSite(parsedContent);
     // convert the data to the JSONSong format - spotify can be used as is, youtube needs to be converted
     let data: JSONSong[] = [];
-    if (site === Site.SPOTIFY) {
-        data = parsedContent;
-        // filter out songs with less than 5000 ms played, and split " " from the date to get the left part which is the YYYY-MM-DD format
-        data = 
-        // filter out songs without the required fields as wel
-        data
-        .filter((record: JSONSong) => record.artistName && record.trackName && 
-        record.endTime && record.msPlayed && record.msPlayed >= cutoffTime)
-        .map((record: JSONSong) => ({ ...record, endTime: record.endTime.split(' ')[0] }));
-    } else {        
-        data = parsedContent
-        // @ts-expect-error
-        .filter(record => 
-            record.activityControls && record.activityControls.length === 1 && record.activityControls[0].toLowerCase() === 'youtube watch history'
-            && record.header && record.header.toLowerCase() === 'youtube music')
-        .map((record: { 
-            title: string,
-            titleUrl: string,
-            subtitles: { 
-                name: string,
-                url: string,
-                }[],
-            time: string
-            }) => ({
-                // convert time to YYYY-MM-DD format
-            endTime: record.time.split('T')[0],
-            artistName: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].name : "Unknown Artist",
-            trackName: record.title,
-            trackUrl: record.titleUrl,
-            artistUrl: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].url : null,
-            msPlayed: 0,
-        }));
-    }
-    if (data.length === 0) {
+    try {
+        if (site === Site.SPOTIFY) {
+            // if there is a ts field, it is an extended spotify file, so we need to convert it
+            if (parsedContent[0].ts) {
+                data = parsedContent
+                .filter((record: 
+                    { 
+                        ms_played: number;
+                        master_metadata_album_artist_name: string; 
+                        master_metadata_track_name: string;
+                    }) => record.ms_played >= cutoffTime
+                && record.master_metadata_album_artist_name && record.master_metadata_track_name)
+                .map((record: {
+                    ts: string; master_metadata_album_artist_name: string;
+                    master_metadata_track_name: string;
+                    ms_played: number;
+                    spotify_track_uri: string;
+                    master_metadata_album_album_name: string; }) => ({
+                    endTime: record.ts.split('T')[0],
+                    artistName: record.master_metadata_album_artist_name,
+                    trackName: record.master_metadata_track_name,
+                    msPlayed: record.ms_played,
+                    trackUri: record.spotify_track_uri,
+                    albumName: record.master_metadata_album_album_name,
+                }));
+            }
+            else {
+                data = parsedContent;
+                // filter out songs with less than 5000 ms played, and split " " from the date to get the left part which is the YYYY-MM-DD format
+                data = 
+                // filter out songs without the required fields as wel
+                data
+                .filter((record: JSONSong) => record.artistName && record.trackName && 
+                record.endTime && record.msPlayed && record.msPlayed >= cutoffTime)
+                .map((record: JSONSong) => ({ ...record, endTime: record.endTime.split(' ')[0] }));
+            }
+        } else {        
+            data = parsedContent
+            // @ts-expect-error
+            .filter(record => 
+                record.activityControls && record.activityControls.length === 1 && record.activityControls[0].toLowerCase() === 'youtube watch history'
+                && record.header && record.header.toLowerCase() === 'youtube music')
+            .map((record: { 
+                title: string,
+                titleUrl: string,
+                subtitles: { 
+                    name: string,
+                    url: string,
+                    }[],
+                time: string
+                }) => ({
+                    // convert time to YYYY-MM-DD format
+                endTime: record.time.split('T')[0],
+                artistName: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].name : "Unknown Artist",
+                trackName: record.title,
+                trackUrl: record.titleUrl,
+                artistUrl: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].url : null,
+                msPlayed: 0,
+            }));
+        }
+        if (data.length === 0) {
+            return { site: Site.NONE, data: [], lastDate: '', firstDate: '' };
+        }
+    } catch {
         return { site: Site.NONE, data: [], lastDate: '', firstDate: '' };
     }
     // find the earliest and latest dates
