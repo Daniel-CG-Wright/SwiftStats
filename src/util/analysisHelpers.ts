@@ -1,10 +1,15 @@
 import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCriteria, FileData, Site, ListeningDataByMonth } from '../types';
 
 export const getFileSite = (parsedFile: JSONSong[]): Site => {
-    if (parsedFile[0].artistName) {
-        return Site.SPOTIFY;
+    try {
+        if (parsedFile[0].artistName) {
+            return Site.SPOTIFY;
+        }
+        return Site.YOUTUBE;
+    } catch {
+        return Site.NONE;
     }
-    return Site.YOUTUBE;
+    
 }
 
 
@@ -24,8 +29,13 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
         data = parsedContent;
         // filter out songs with less than 5000 ms played, and split " " from the date to get the left part which is the YYYY-MM-DD format
         data = data.filter((record: JSONSong) => record.msPlayed >= cutoffTime).map((record: JSONSong) => ({ ...record, endTime: record.endTime.split(' ')[0] }));
-    } else {
-        data = parsedContent.map((record: { 
+    } else {        
+        data = parsedContent
+        // @ts-expect-error
+        .filter(record => 
+            record.activityControls && record.activityControls.length === 1 && record.activityControls[0].toLowerCase() === 'youtube watch history'
+            && record.header && record.header.toLowerCase() === 'youtube music')
+        .map((record: { 
             title: string,
             titleUrl: string,
             subtitles: { 
@@ -36,14 +46,16 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
             }) => ({
                 // convert time to YYYY-MM-DD format
             endTime: record.time.split('T')[0],
-            artistName: record.subtitles[0].name,
+            artistName: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].name : "Unknown Artist",
             trackName: record.title,
             trackUrl: record.titleUrl,
-            artistUrl: record.subtitles[0].url,
+            artistUrl: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].url : null,
             msPlayed: 0,
         }));
     }
-
+    if (data.length === 0) {
+        return { site: Site.NONE, data: [], lastDate: '', firstDate: '' };
+    }
     // find the earliest and latest dates
     let firstDate = data[0].endTime;
     let lastDate = data[0].endTime;

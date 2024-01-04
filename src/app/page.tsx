@@ -28,6 +28,14 @@ const IndexPage = () => {
     useEffect(() => {
         if (fileContent) {
             setFileData(getFileData(fileContent, cutoffTime));
+            // if the file data is an empty object then the file is invalid
+            if (fileData.site === Site.NONE) {
+                setFileContent('');
+                // show an error message
+                alert('Invalid file content - ensure you are uploading valid Spotify or Youtube Music data');
+                // clear local storage
+                localStorage.removeItem('uploadedFile');
+            }
         }
         else
         {
@@ -64,8 +72,6 @@ const IndexPage = () => {
 
     // other section ideas:
     /*
-    Listening clock for indivdual songs (click on a song and see the listening clock for that song)
-    Other stats for indivdual songs (click on a song and see the stats for that song)
     Comparison section (compare 2 time periods such as 2020 vs 2021)
     Top songs for each month (could be on the listening clock)
     */
