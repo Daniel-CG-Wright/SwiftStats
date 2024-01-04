@@ -13,7 +13,8 @@ export interface Song {
     position: number;
 }
 
-// designed to incorporate elements from spotify and youtube
+// designed to incorporate elements from spotify and youtube, used to store JSON
+// data in FileData
 export interface JSONSong {
     endTime: string;
     artistName: string;

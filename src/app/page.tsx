@@ -6,7 +6,7 @@ import MostListenedToSongsComponent from './components/MostListenedSongsComponen
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from './components/DateSelectComponent';
-import { FileData, Site } from '@/types';
+import { FileData, Site, Song } from '@/types';
 import { getFileData } from '@/util/analysisHelpers';
 
 
@@ -32,6 +32,12 @@ const IndexPage = () => {
         else
         {
             setShowFileUpload(true);
+            setFileData({
+                site: Site.NONE,
+                data: [],
+                firstDate: '',
+                lastDate: '',
+            })
         }
     }, [fileContent]);
 
@@ -81,6 +87,19 @@ const IndexPage = () => {
                         setFileContent={setFileContent}
                     />
                 </div>
+                {
+                    fileData && fileData.data.length > 0 && (
+                        <div className="px-4 py-2">
+                            <h1>File Info</h1>
+                            <div className="py-2">
+                                <p>Site: {fileData.site}</p>
+                                <p>Number of songs: {fileData.data.length}</p>
+                                <p>First date: {fileData.firstDate}</p>
+                                <p>Last date: {fileData.lastDate}</p>
+                            </div>
+                        </div>
+                    )
+                }
                 <div className="py-4 mt-2">
                     {fileContent ? (
                         <div>

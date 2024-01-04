@@ -1,5 +1,13 @@
 import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCriteria, FileData, Site, ListeningDataByMonth } from '../types';
 
+export const getFileSite = (parsedFile: JSONSong[]): Site => {
+    if (parsedFile[0].artistName) {
+        return Site.SPOTIFY;
+    }
+    return Site.YOUTUBE;
+}
+
+
 /**
  * This function takes in the file string content and returns FileData
  * @param fileContent the string content of the file
@@ -9,7 +17,7 @@ import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCr
 export const getFileData = (fileContent: string, cutoffTime: number): FileData => {
     const parsedContent = JSON.parse(fileContent);
     // content was validated in the file upload component
-    const site = parsedContent[0].header ? Site.YOUTUBE : Site.SPOTIFY;
+    const site = getFileSite(parsedContent);
     // convert the data to the JSONSong format - spotify can be used as is, youtube needs to be converted
     let data: JSONSong[] = [];
     if (site === Site.SPOTIFY) {
