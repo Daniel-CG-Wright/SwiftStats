@@ -53,8 +53,6 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileData, s
         onBack();
       };
 
-    
-
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { trackName: song.name, artist: song.artist.name }, startDate, endDate);
 
     return (
@@ -71,7 +69,12 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileData, s
             
             <table>
                 <tbody>
-                    <DetailedInfoComponent site={fileData.site} timeListened={timeListened} timesStreamed={timesStreamed} averageTimeListenedPerStream={averageTimeListenedPerStream} averages={averages} />
+                    <DetailedInfoComponent
+                    site={fileData.site}
+                    timeListened={timeListened}
+                    timesStreamed={timesStreamed}
+                    averageTimeListenedPerStream={averageTimeListenedPerStream}
+                    averages={averages} />
                 </tbody>
             </table>
             <ListeningClockWrapperComponent fileData={fileData} criteria={{ artist: song.artist.name, trackName: song.name }} />
