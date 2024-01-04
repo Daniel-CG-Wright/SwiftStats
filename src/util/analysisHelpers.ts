@@ -165,8 +165,7 @@ export const getMostSongsListenedTo = (fileData: FileData, startDate: string, en
         .sort((a, b) => b.minutesListened - a.minutesListened);
     }
     else if (fileData.site === Site.YOUTUBE) {
-        songsListenedTo = songsListenedTo.filter(song => song.timesStreamed > 1)
-        .sort((a, b) => b.timesStreamed - a.timesStreamed);
+        songsListenedTo = songsListenedTo.sort((a, b) => b.timesStreamed - a.timesStreamed);
     }
 
     // Add position to each song
@@ -211,8 +210,7 @@ export const getMostListenedArtists = (fileData: FileData, startDate: string, en
         .sort((a, b) => b.minutesListened - a.minutesListened);
     }
     else if (fileData.site === Site.YOUTUBE) {
-        artists = artists.filter(artist => artist.timesStreamed > 1)
-        .sort((a, b) => b.timesStreamed - a.timesStreamed);
+        artists = artists.sort((a, b) => b.timesStreamed - a.timesStreamed);
     }
 
     artists.forEach((artist, index) => {
