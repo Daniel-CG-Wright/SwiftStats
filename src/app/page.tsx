@@ -27,14 +27,18 @@ const IndexPage = () => {
 
     useEffect(() => {
         if (fileContent) {
-            setFileData(getFileData(fileContent, cutoffTime));
+            const receivedFileData = getFileData(fileContent, cutoffTime);
             // if the file data is an empty object then the file is invalid
-            if (fileData.site === Site.NONE) {
+            if (receivedFileData.site === Site.NONE) {
                 setFileContent('');
                 // show an error message
                 alert('Invalid file content - ensure you are uploading valid Spotify or Youtube Music data');
                 // clear local storage
                 localStorage.removeItem('uploadedFile');
+            }
+            else
+            {
+                setFileData(receivedFileData);
             }
         }
         else

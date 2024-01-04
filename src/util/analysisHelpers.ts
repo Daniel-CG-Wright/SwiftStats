@@ -9,7 +9,7 @@ export const getFileSite = (parsedFile: JSONSong[]): Site => {
     } catch {
         return Site.NONE;
     }
-    
+
 }
 
 
@@ -28,7 +28,12 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
     if (site === Site.SPOTIFY) {
         data = parsedContent;
         // filter out songs with less than 5000 ms played, and split " " from the date to get the left part which is the YYYY-MM-DD format
-        data = data.filter((record: JSONSong) => record.msPlayed >= cutoffTime).map((record: JSONSong) => ({ ...record, endTime: record.endTime.split(' ')[0] }));
+        data = 
+        // filter out songs without the required fields as wel
+        data
+        .filter((record: JSONSong) => record.artistName && record.trackName && 
+        record.endTime && record.msPlayed && record.msPlayed >= cutoffTime)
+        .map((record: JSONSong) => ({ ...record, endTime: record.endTime.split(' ')[0] }));
     } else {        
         data = parsedContent
         // @ts-expect-error
