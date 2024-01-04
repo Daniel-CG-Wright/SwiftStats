@@ -39,6 +39,8 @@ const IndexPage = () => {
             else
             {
                 setFileData(receivedFileData);
+                setStartDate(receivedFileData.firstDate);
+                setEndDate(receivedFileData.lastDate);
             }
         }
         else
