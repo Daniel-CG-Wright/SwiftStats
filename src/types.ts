@@ -11,6 +11,15 @@ export interface Song {
     minutesListened: number;
     timesStreamed: number;
     position: number;
+    album?: Album;
+}
+
+export interface Album {
+    name: string;
+    artist: Artist;
+    minutesListened: number;
+    timesStreamed: number;
+    position: number;
 }
 
 // designed to incorporate elements from spotify and youtube, used to store JSON
@@ -58,6 +67,7 @@ export interface QuantityCriteria {
 export enum Site {
     SPOTIFY = "Spotify",
     YOUTUBE = "YouTube Music",
+    SPOTIFY_EXTENDED = "Spotify Extended",
     NONE = "None",
 }
 export interface FileData {

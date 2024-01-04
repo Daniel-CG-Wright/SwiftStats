@@ -1,10 +1,14 @@
-import { Song, Artist, NumberByMonth, JSONSong, AverageListeningData, QuantityCriteria, FileData, Site, ListeningDataByMonth } from '../types';
+import { Song, Artist, Album, JSONSong, AverageListeningData, QuantityCriteria, FileData, Site, ListeningDataByMonth } from '../types';
 
 export const getFileSite = (parsedFile: any[]): Site => {
     try {
         // ts is on extended spotify files
-        if (parsedFile[0].artistName || parsedFile[0].ts) {
+        if (parsedFile[0].artistName) {
             return Site.SPOTIFY;
+        }
+        else if (parsedFile[0].ts)
+        {
+            return Site.SPOTIFY_EXTENDED
         }
         return Site.YOUTUBE;
     } catch {
@@ -28,9 +32,19 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
     let data: JSONSong[] = [];
     try {
         if (site === Site.SPOTIFY) {
-            // if there is a ts field, it is an extended spotify file, so we need to convert it
-            if (parsedContent[0].ts) {
-                data = parsedContent
+
+            data = parsedContent;
+            // filter out songs with less than 5000 ms played, and split " " from the date to get the left part which is the YYYY-MM-DD format
+            data = 
+            // filter out songs without the required fields as wel
+            data
+            .filter((record: JSONSong) => record.artistName && record.trackName && 
+            record.endTime && record.msPlayed && record.msPlayed >= cutoffTime)
+            .map((record: JSONSong) => ({ ...record, endTime: record.endTime.split(' ')[0] }));
+            
+        } 
+        else if (site === Site.SPOTIFY_EXTENDED) {
+            data = parsedContent
                 .filter((record: 
                     { 
                         ms_played: number;
@@ -51,18 +65,8 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
                     trackUri: record.spotify_track_uri,
                     albumName: record.master_metadata_album_album_name,
                 }));
-            }
-            else {
-                data = parsedContent;
-                // filter out songs with less than 5000 ms played, and split " " from the date to get the left part which is the YYYY-MM-DD format
-                data = 
-                // filter out songs without the required fields as wel
-                data
-                .filter((record: JSONSong) => record.artistName && record.trackName && 
-                record.endTime && record.msPlayed && record.msPlayed >= cutoffTime)
-                .map((record: JSONSong) => ({ ...record, endTime: record.endTime.split(' ')[0] }));
-            }
-        } else {        
+        }
+        else {        
             data = parsedContent
             // @ts-expect-error
             .filter(record => 
@@ -113,17 +117,20 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
  * @param fileContent the JSON content of the file
  * @param startDate the start date of the filter
  * @param endDate the end date of the filter
+ * @param artists the list of artists so that the song can be linked to an artist
+ * @param albums the list of albums so that the song can be linked to an album
  * @returns a list of songs listened to in order of most listened to by ms listened
  * (see the Song interface for more details)
  */
-export const getMostSongsListenedTo = (fileData: FileData, startDate: string, endDate: string, artists: Artist[]): Song[] => {
+export const getMostSongsListenedTo = (fileData: FileData, startDate: string, endDate: string, artists: Artist[], albums?: Album[]): Song[] => {
     const artistTrackSeparator = '¬sep¬';
     const data = fileData.data;
 
     const playtimeMap = new Map<string, number>();
     const streamCountMap = new Map<string, number>();
+    const albumMap = new Map<string, Album>();
 
-    data.forEach((record: { artistName: string; trackName: string; msPlayed: number; endTime: string; }) => {
+    data.forEach((record: { artistName: string; trackName: string; msPlayed: number; endTime: string; albumName?: string; }) => {
         // Convert recordTime to YYYY-MM-DD format
         const recordTime = record.endTime.split(' ')[0];
 
@@ -134,6 +141,13 @@ export const getMostSongsListenedTo = (fileData: FileData, startDate: string, en
             const currentStreamCount = streamCountMap.get(key) || 0;
             playtimeMap.set(key, currentPlaytime + record.msPlayed);
             streamCountMap.set(key, currentStreamCount + 1);
+            if (record.albumName && !albumMap.has(key)) {
+                // get the album from the list of albums, and if it exists, add it to the map
+                const album = albums?.find(album => album.name === record.albumName);
+                if (album) {
+                    albumMap.set(key, album);
+                }
+            }
         }
     });
     
@@ -144,8 +158,9 @@ export const getMostSongsListenedTo = (fileData: FileData, startDate: string, en
             minutesListened: Number((msPlayed / 60000).toFixed(1)),
             timesStreamed: streamCountMap.get(key) || 0,
             position: 0,
+            album: albumMap.get(key) || undefined,
     }));
-    if (fileData.site === Site.SPOTIFY) {
+    if (fileData.site === Site.SPOTIFY || fileData.site === Site.SPOTIFY_EXTENDED) {
         songsListenedTo = songsListenedTo.filter(song => song.minutesListened > 1)
         .sort((a, b) => b.minutesListened - a.minutesListened);
     }
@@ -165,7 +180,9 @@ export const getMostSongsListenedTo = (fileData: FileData, startDate: string, en
 /**
  * This function gets a list of artists in order of most listened to least listened
  * and returns an array of objects with the artist name and the number of minutes listened
- * @param fileContent - The contents of the listening history file.
+ * @param fileData
+ * @param startDate the start date of the filter
+ * @param endDate the end date of the filter
  * @returns An array of objects with the artist name and the number of minutes listened
  */
 export const getMostListenedArtists = (fileData: FileData, startDate: string, endDate: string): Artist[] => {
@@ -189,7 +206,7 @@ export const getMostListenedArtists = (fileData: FileData, startDate: string, en
     });
 
     let artists = Array.from(playtimeMap, ([name, minutesListened]) => ({ name, minutesListened: minutesListened / 60000, timesStreamed: timesStreamedMap.get(name) || 0, position: 0}));
-    if (fileData.site === Site.SPOTIFY) {
+    if (fileData.site === Site.SPOTIFY || fileData.site === Site.SPOTIFY_EXTENDED) {
         artists = artists.filter(artist => artist.minutesListened > 1)
         .sort((a, b) => b.minutesListened - a.minutesListened);
     }
@@ -203,6 +220,59 @@ export const getMostListenedArtists = (fileData: FileData, startDate: string, en
     });
 
     return artists;
+};
+
+/**
+ * This function gets a list of albums in order of most listened to least listened
+ * and returns an array of objects with the album name and the number of minutes listened
+ * @param fileData
+ * @param startDate the start date of the filter
+ * @param endDate the end date of the filter
+ * @param artists the list of artists so that the album can be linked to an artist
+ * @returns An array of objects with the album name and the number of minutes listened
+ */
+export const getMostListenedAlbums = (fileData: FileData, startDate: string, endDate: string, artists: Artist[]): Album[] => {
+    const data = fileData.data;
+    const playtimeMap = new Map<string, number>();
+    const timesStreamedMap = new Map<string, number>();
+
+    // startDate and endDate are in the format YYYY-MM-DD
+
+    data.forEach((record: { artistName: string; albumName?: string; msPlayed: number, endTime: string }) => {
+        // Compare the record's end time to the start and end dates (after converting the record's end time to YYYY-MM-DD)
+        const recordTime = new Date(record.endTime).toISOString().split('T')[0];
+
+        // Only process records within the date range
+        if (recordTime >= startDate && recordTime <= endDate) {
+            const key = `${record.artistName}¬sep¬${record.albumName}`;
+            const currentPlaytime = playtimeMap.get(key) || 0;
+            playtimeMap.set(key, currentPlaytime + record.msPlayed);
+            const currentTimesStreamed = timesStreamedMap.get(key) || 0;
+            timesStreamedMap.set(key, currentTimesStreamed + 1);
+        }
+    });
+
+    let albums = Array.from(playtimeMap, ([name, minutesListened]) => ({
+        name: name.split('¬sep¬')[1],
+        artist: artists.find(artist => artist.name === name.split('¬sep¬')[0]) || { name: name.split('¬sep¬')[0], minutesListened: 0, timesStreamed: 0, position: 0 },
+        minutesListened: minutesListened / 60000,
+        timesStreamed: timesStreamedMap.get(name) || 0,
+        position: 0,
+    }));
+    if (fileData.site === Site.SPOTIFY || fileData.site === Site.SPOTIFY_EXTENDED) {
+        albums = albums.filter(album => album.minutesListened > 1)
+        .sort((a, b) => b.minutesListened - a.minutesListened);
+    }
+    else if (fileData.site === Site.YOUTUBE) {
+        albums = albums.filter(album => album.timesStreamed > 1)
+        .sort((a, b) => b.timesStreamed - a.timesStreamed);
+    }
+
+    albums.forEach((album, index) => {
+        album.position = index + 1;
+    });
+
+    return albums;
 };
 
 /**

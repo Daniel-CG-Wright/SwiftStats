@@ -6,6 +6,7 @@ import MostListenedToSongsComponent from './components/MostListenedSongsComponen
 import MostListenedArtistsComponent from './components/MostListenedArtistsComponent';
 import ProfileStatsComponent from './components/ProfileStatsComponent';
 import DateSelectComponent from './components/DateSelectComponent';
+import MostListenedAlbumsComponent from './components/MostListenedAlbumsComponent';
 import { FileData, Site, Song } from '@/types';
 import { getFileData } from '@/util/analysisHelpers';
 
@@ -24,40 +25,7 @@ const IndexPage = () => {
     });
 
     const cutoffTime = 5000; // 5000ms at least to count as a song listened to
-
-    useEffect(() => {
-        if (fileContent) {
-            const receivedFileData = getFileData(fileContent, cutoffTime);
-            // if the file data is an empty object then the file is invalid
-            if (receivedFileData.site === Site.NONE) {
-                setFileContent('');
-                // show an error message
-                alert('Invalid file content - ensure you are uploading valid Spotify or Youtube Music data');
-                // clear local storage
-                localStorage.removeItem('uploadedFile');
-            }
-            else
-            {
-                setFileData(receivedFileData);
-                setStartDate(receivedFileData.firstDate);
-                setEndDate(receivedFileData.lastDate);
-            }
-        }
-        else
-        {
-            setShowFileUpload(true);
-            setFileData({
-                site: Site.NONE,
-                data: [],
-                firstDate: '',
-                lastDate: '',
-            })
-        }
-    }, [fileContent]);
-
-    // we will have an array of sections corresponding to the different analysis sections we
-    // can display. The user clicks on the corresponding button.
-    const sections = [
+    let sections = [
         {
             title: 'Profile Stats',
             component: <ProfileStatsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
@@ -75,6 +43,54 @@ const IndexPage = () => {
         },
 
     ];
+    useEffect(() => {
+        if (fileContent) {
+            const receivedFileData = getFileData(fileContent, cutoffTime);
+            // if the file data is an empty object then the file is invalid
+            if (receivedFileData.site === Site.NONE) {
+                setFileContent('');
+                // show an error message
+                alert('Invalid file content - ensure you are uploading valid Spotify or Youtube Music data');
+                // clear local storage
+                localStorage.removeItem('uploadedFile');
+            }
+            else
+            {
+                setFileData(receivedFileData);
+                setStartDate(receivedFileData.firstDate);
+                setEndDate(receivedFileData.lastDate);
+                // we will have an array of sections corresponding to the different analysis sections we
+                // can display. The user clicks on the corresponding button.
+                
+
+                if (fileData.site === Site.SPOTIFY_EXTENDED)
+                {
+                    sections.push({
+                        title: 'Albums Ranking',
+                        component: <MostListenedAlbumsComponent fileData={fileData} startDate={startDate} endDate={endDate} />,
+                        hideDateSelect: false,
+                    });
+                }
+                else if (sections.length === 4)
+                {
+                    sections.pop();
+                }
+
+            }
+        }
+        else
+        {
+            setShowFileUpload(true);
+            setFileData({
+                site: Site.NONE,
+                data: [],
+                firstDate: '',
+                lastDate: '',
+            })
+        }
+    }, [fileContent]);
+
+    
 
     // other section ideas:
     /*
@@ -103,6 +119,9 @@ const IndexPage = () => {
                     fileData && fileData.data.length > 0 && (
                         <div className="px-4 py-2">
                             <h1>File Info</h1>
+                            {
+                                
+                            }
                             <div className="py-2">
                                 <p>Site: {fileData.site}</p>
                                 <p>Number of songs: {fileData.data.length}</p>

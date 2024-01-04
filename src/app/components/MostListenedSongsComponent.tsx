@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Song, FileData, Site } from '@/types';
 import { timeFormat } from '@/util/dateTimeFormat';
 import SongDetailsComponent from './SongDetailsComponent';
-import { getMostSongsListenedTo, getMostListenedArtists } from '@/util/analysisHelpers';
+import { getMostSongsListenedTo, getMostListenedArtists, getMostListenedAlbums } from '@/util/analysisHelpers';
 import PageChangerComponent from './PageChangerComponent';
 
 interface MostListenedToSongsComponentProps {
@@ -22,7 +22,8 @@ interface MostListenedToSongsComponentProps {
 const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> = ({ fileData, startDate, endDate }) => {
     // need the artists so that we can display their position
     const artistsListenedTo = getMostListenedArtists(fileData, startDate, endDate);
-    const songsListenedTo = getMostSongsListenedTo(fileData, startDate, endDate, artistsListenedTo);
+    const albumsListenedTo = getMostListenedAlbums(fileData, startDate, endDate, artistsListenedTo);
+    const songsListenedTo = getMostSongsListenedTo(fileData, startDate, endDate, artistsListenedTo, albumsListenedTo);
     const [selectedSong, setSelectedSong] = useState<Song | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 250;
@@ -59,6 +60,10 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                         <th>#</th>
                         <th>Artist</th>
                         <th>Song</th>
+                        {
+                            fileData.site === Site.SPOTIFY_EXTENDED &&
+                            <th>Album</th>
+                        }
                         { fileData.site !== Site.YOUTUBE && <th>Time Listened</th> }
                         <th>Times Streamed</th>
                     </tr>
@@ -69,6 +74,10 @@ const MostListenedToSongsComponent: React.FC<MostListenedToSongsComponentProps> 
                             <td style={{ height: 'auto' }}>{(index + 1) + (currentPage - 1) * itemsPerPage}</td>
                             <td style={{ height: 'auto' }}>{song.artist.name}</td>
                             <td style={{ height: 'auto' }}>{song.name}</td>
+                            {
+                                fileData.site === Site.SPOTIFY_EXTENDED &&
+                                <td style={{ height: 'auto' }}>{song.album ? song.album.name : "Unknown Album"}</td>
+                            }
                             {
                                 fileData.site !== Site.YOUTUBE &&
                                 <td style={{ height: 'auto' }}>{timeFormat(song.minutesListened)} ({song.minutesListened.toFixed(1)} minutes)</td>
