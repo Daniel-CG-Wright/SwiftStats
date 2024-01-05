@@ -17,6 +17,8 @@ export const getFileSite = (parsedFile: any[]): Site => {
 
 }
 
+// DO API STUFF BASED ON PAGES (50 SONGS PER PAGE, FOR 50 ITEMS PER API CALL - MAYBE DO THE SAME FOR ARTISTS AND ALBUMS,
+// AND FOR DETAILS PAGE WE CAN DO AN API CALL SEARCHING FOR THE DATA).
 
 /**
  * This function takes in the file string content and returns FileData
