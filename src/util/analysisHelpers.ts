@@ -86,8 +86,8 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
                 }) => ({
                     // convert time to YYYY-MM-DD format
                 endTime: record.time.split('T')[0],
-                artistName: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].name : "Unknown Artist",
-                trackName: record.title,
+                artistName: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].name.split(" - Topic")[0] : "Unknown Artist",
+                trackName: record.title.split("Watched ")[1],
                 trackUrl: record.titleUrl,
                 artistUrl: record.subtitles && record.subtitles.length > 0 ? record.subtitles[0].url : null,
                 msPlayed: 0,
@@ -111,7 +111,13 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
         }
     });
 
-    return { site, data, lastDate, firstDate };
+    let username: string | undefined = undefined;
+    if (site === Site.SPOTIFY_EXTENDED)
+    {
+        username = parsedContent[-1].username;
+    }
+
+    return { site, data, lastDate, firstDate, username };
 }
 
 /**
@@ -130,7 +136,7 @@ export const getMostSongsListenedTo = (fileData: FileData, startDate: string, en
 
     const songMap = new Map<string, { msPlayed: number, streamCount: number, album?: Album, songUrl?: string }>();
 
-    data.forEach((record: { artistName: string; trackName: string; msPlayed: number; endTime: string; albumName?: string; }) => {
+    data.forEach((record: JSONSong) => {
         // Convert recordTime to YYYY-MM-DD format
         const recordTime = record.endTime.split(' ')[0];
 
@@ -149,8 +155,8 @@ export const getMostSongsListenedTo = (fileData: FileData, startDate: string, en
                     currentSongData.album = album;
                 }
             }
-            if (record.artistName && !currentSongData.songUrl) {
-                currentSongData.songUrl = record.artistName;
+            if (record.trackUrl && !currentSongData.songUrl) {
+                currentSongData.songUrl = record.trackUrl;
             }
 
             songMap.set(key, currentSongData);
@@ -368,7 +374,6 @@ export const getListeningTimeByMonth = (fileData: FileData, criteria: QuantityCr
  */
 export const getDetailedData = (fileData: FileData, criteria: QuantityCriteria, startDate: string, endDate: string): { timeListened: number, timesStreamed: number, averageTimeListenedPerStream: number, averages: AverageListeningData } => {
     const data = fileData.data;
-    console.log(criteria);
     const outputData = data.filter((record: JSONSong) => {
         // Only process records within the date range
         if (record.endTime >= startDate && record.endTime <= endDate) {

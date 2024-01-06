@@ -33,6 +33,11 @@ export interface SongAPIData extends APIData {
     previewUrl?: string;
 }
 
+export interface ProfileAPIData extends APIData {
+    displayName: string;
+    followers: number;
+}
+
 // designed to incorporate elements from spotify and youtube, used to store JSON
 // data in FileData
 export interface JSONSong {
@@ -94,6 +99,7 @@ export interface FileData {
     // these will be in the format YYYY-MM-DD
     firstDate: string;
     lastDate: string;
+    username?: string;
 }
 
 export interface ListeningDataByMonth {

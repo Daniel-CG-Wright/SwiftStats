@@ -27,10 +27,9 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileDat
     useEffect(() => {
         // Fetch API data when component mounts
         const fetchData = async () => {
-            if (fileData.site === Site.SPOTIFY_EXTENDED) {
-                const data = await getAPIData({ artist: artist.name }, Categories.ARTIST);
-                setApiData(data);
-            }
+            const data = await getAPIData({ artist: artist.name }, Categories.ARTIST);
+            setApiData(data);
+            
         };
 
         fetchData();
@@ -65,33 +64,50 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileDat
     onBack();
   };
 
-    let artistUrl: string | null = null;
-    if (apiData) {
-        artistUrl = apiData.spotifyUrl;
-    }
-    else if (artist.artistUrl)
-    {
+    let artistUrl: string | undefined = apiData?.spotifyUrl;
+    if (fileData.site === Site.YOUTUBE && artist.artistUrl) {
         artistUrl = artist.artistUrl;
     }
 
+    let imageUrl = apiData?.imageUrl;
+    let imageComponent = (
+        <img src={imageUrl} alt={artist.name} className="w-full h-full aspect-square rounded-full" />
+    )
 
     return (
         <div className="px-4">
             <button ref={backButtonRef} onClick={handleBackClick} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
                 <img src="/backarrow.png" alt="Back" className='back-arrow'/>
             </button>
-            <div className="flex items-center">
+            <div className="flex flex-col md:pb-8">
+                {
+                    imageUrl &&
+                    (
+                        <div className="md:w-64 md:h-64 md:mb-5">
+                            {
+                                artistUrl ? (
+                                    <Link href={artistUrl}>
+                                        {imageComponent}
+                                    </Link>
+                                ) : (
+                                    imageComponent
+                                )
+                            }
+                        </div>
+                    )
+                }
                 <h1>
                     {
-                        apiData ? (
-                            <Link href={apiData.spotifyUrl} className="link-header">
+                        artistUrl ? (
+                            <Link href={artistUrl} className="link-header">
                                 {artist.name} <FaExternalLinkAlt className="inline-block text-gray-400 text-sm" />
                             </Link>
                         ) : (
                             artist.name
                         )
                     }
-                </h1><span className="text-gray-400 px-2 text-3xl font-bold m-0">#{artist.position}</span>
+                    <span className="text-gray-400 px-2 text-3xl font-bold m-0">#{artist.position}</span>
+                </h1>
             </div>
             <table>
                 <tbody>

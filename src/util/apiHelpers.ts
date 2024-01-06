@@ -9,7 +9,7 @@ let bearerToken: string;
  * @param {string} type - The type of query to search for. Can be 'track', 'album' or 'artist'.
  * @returns {Promise<APIData | SongAPIData>} The API data for the query (song API data if type is 'track').
  */
-export const getAPIData = async (criteria: QuantityCriteria, type: Categories): Promise<APIData | SongAPIData> => {
+export const getAPIData = async (criteria: QuantityCriteria, type: Categories): Promise<APIData | SongAPIData | null> => {
     let query = "";
     if (criteria.trackName && type === Categories.TRACK)
     {
@@ -25,6 +25,7 @@ export const getAPIData = async (criteria: QuantityCriteria, type: Categories): 
         // default to artist
         type = Categories.ARTIST;
     }
+    console.log("query: " + query);
     query = encodeURIComponent(query);
     if (!bearerToken)
     {
@@ -46,11 +47,17 @@ export const getAPIData = async (criteria: QuantityCriteria, type: Categories): 
                 }
             });
         } else {
-            console.log(error);
             throw error; // Re-throw the error if it's not an unauthorized error
         }
     }
     const data = response.data;
+
+    // If the API returns no results, return null
+    if (data[type + 's'].items.length === 0)
+    {
+        console.log(`No results found for ${type} ${criteria.artist} ${criteria.trackName} ${criteria.albumName}`);
+        return null;
+    }
 
     if (type === 'track')
     {

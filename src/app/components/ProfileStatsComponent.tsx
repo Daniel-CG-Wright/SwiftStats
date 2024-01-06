@@ -1,11 +1,10 @@
 // src\app\stats\components\ProfileStatsComponent.tsx
 
 import React from 'react';
-import { FileData } from '@/types';
+import { FileData, ProfileAPIData } from '@/types';
 import { getDetailedData, getListeningTimeByMonth } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
-import { time } from 'console';
 
 interface ProfileStatsComponentProps {
     fileData: FileData;
@@ -14,6 +13,8 @@ interface ProfileStatsComponentProps {
 }
 
 const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData, startDate, endDate }) => {
+
+    const [profileAPIData, setProfileAPIData] = React.useState<any>(null);
 
     const data = fileData.data;
     
@@ -27,7 +28,6 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData,
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { trackName: '', artist: '' }, startDate, endDate);
     const uniqueArtists = new Set(filteredData.map(record => record.artistName)).size;
     const uniqueTracks = new Set(filteredData.map(record => record.trackName)).size;
-    console.log(timeListened, timesStreamed, averageTimeListenedPerStream, averages);
 
     return (
         <div className="py-2 px-4 h-full w-full flex flex-grow flex-col">

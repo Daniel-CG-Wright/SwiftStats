@@ -63,8 +63,11 @@ const AlbumDetailsComponent: React.FC<AlbumDetailsComponentProps> = ({ fileData,
 
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { artist: album.artist.name, albumName: album.name }, startDate, endDate);
 
-    let albumUrl = apiData?.spotifyUrl;
+    let albumUrl = apiData?.spotifyUrl; // no youtube url for albums
     let imageUrl = apiData?.imageUrl;
+    let imageComponent = (
+        <img src={imageUrl} alt={album.name} className="object-cover w-full h-full" />
+    )
 
     return (
         <div className="px-4">
@@ -75,8 +78,17 @@ const AlbumDetailsComponent: React.FC<AlbumDetailsComponentProps> = ({ fileData,
                 {
                     imageUrl &&
                     (
-                        <div className="w-full md:w-64 h-64 md:pb-5">
-                            <img src={imageUrl} alt={album.name} className="object-cover w-full h-full" />
+                        <div className="w-full md:w-64 h-64 md:mb-5">
+                            {
+                                albumUrl ?
+                                    (
+                                        <Link href={albumUrl}>
+                                            {imageComponent}
+                                        </Link>
+                                    )
+                                    :
+                                    imageComponent
+                            }
                         </div>
                     )
                 }
