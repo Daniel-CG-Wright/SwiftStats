@@ -1,8 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import { Album, FileData, Site } from '@/types';
+import React, { useRef, useEffect, useState } from 'react';
+import { Album, FileData, Site, Categories, APIData } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
+import { getAPIData } from '@/util/apiHelpers';
+import Link from 'next/link';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 interface AlbumDetailsComponentProps {
     fileData: FileData;
@@ -23,15 +26,19 @@ const AlbumDetailsComponent: React.FC<AlbumDetailsComponentProps> = ({ fileData,
     // in the same format as the profile stats page.
     // TODO have an arrow left for the back button
     const albumNameRef = useRef<HTMLButtonElement>(null);
+    const [apiData, setApiData] = useState<APIData | null>(null);
 
     useEffect(() => {
-            if (albumNameRef.current) {
-                window.scrollTo({
-                    top: albumNameRef.current.offsetTop - 60,
-                });
-            }
-        
+        if (albumNameRef.current) {
+            window.scrollTo({
+                top: albumNameRef.current.offsetTop - 60,
+            });
+        }
     }, []);
+
+    useEffect(() => {
+        getAPIData({ artist: album.artist.name, albumName: album.name }, Categories.ALBUM).then(setApiData);
+    }, [album.name]);
 
     const handleBackClick = () => {
         // Get the index of the clicked album row
@@ -53,9 +60,9 @@ const AlbumDetailsComponent: React.FC<AlbumDetailsComponentProps> = ({ fileData,
         onBack();
       };
 
-    
-
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { artist: album.artist.name, albumName: album.name }, startDate, endDate);
+
+    let albumUrl = apiData?.spotifyUrl;
 
     return (
         <div className="px-4">
@@ -63,7 +70,19 @@ const AlbumDetailsComponent: React.FC<AlbumDetailsComponentProps> = ({ fileData,
                 <img src="/backarrow.png" alt="Back" className='back-arrow'/>
             </button>
             <div className="flex items-center">
-                <h1>{album.name}</h1><span className="text-gray-400 px-2 text-3xl font-bold m-0">#{album.position}</span>
+                <h1>
+                    {
+                        albumUrl ?
+                            (
+                                <Link href={albumUrl} className='link-header'>
+                                    {album.name} <FaExternalLinkAlt className='inline-block text-gray-400 text-sm' />
+                                </Link>
+                            )
+                            :
+                            album.name
+                    }
+                </h1>
+                <span className="text-gray-400 px-2 text-3xl font-bold m-0">#{album.position}</span>
             </div>
             <div className="flex items-center">
                 <h2>{album.artist.name}</h2><span className="text-gray-400 px-2 text-2xl font-bold m-0">#{album.artist.position}</span>

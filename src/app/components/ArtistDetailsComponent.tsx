@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import { Artist, FileData } from '@/types';
+import React, { useEffect, useRef, useState } from 'react';
+import { Artist, FileData, APIData, Categories, Site } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
+import { getAPIData } from '@/util/apiHelpers';
+import { FaExternalLinkAlt } from 'react-icons/fa';
+import Link from 'next/link';
 
 interface ArtistDetailsComponentProps {
     fileData: FileData;
@@ -18,6 +21,21 @@ interface ArtistDetailsComponentProps {
 const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileData, artist, startDate, endDate, onBack }) => {
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { artist: artist.name, trackName: '' }, startDate, endDate);
     const backButtonRef = useRef<HTMLButtonElement>(null);
+    // State to hold API data
+    const [apiData, setApiData] = useState<APIData | null>(null);
+
+    useEffect(() => {
+        // Fetch API data when component mounts
+        const fetchData = async () => {
+            if (fileData.site === Site.SPOTIFY_EXTENDED) {
+                const data = await getAPIData({ artist: artist.name }, Categories.ARTIST);
+                setApiData(data);
+            }
+        };
+
+        fetchData();
+    }, [artist.name]);
+
     useEffect(() => {
         if (backButtonRef.current) {
             window.scrollTo({
@@ -46,13 +64,34 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileDat
     // Call the original onBack function
     onBack();
   };
+
+    let artistUrl: string | null = null;
+    if (apiData) {
+        artistUrl = apiData.spotifyUrl;
+    }
+    else if (artist.artistUrl)
+    {
+        artistUrl = artist.artistUrl;
+    }
+
+
     return (
         <div className="px-4">
             <button ref={backButtonRef} onClick={handleBackClick} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
                 <img src="/backarrow.png" alt="Back" className='back-arrow'/>
             </button>
             <div className="flex items-center">
-                <h1>{artist.name}</h1><span className="text-gray-400 px-2 text-3xl font-bold m-0">#{artist.position}</span>
+                <h1>
+                    {
+                        apiData ? (
+                            <Link href={apiData.spotifyUrl} className="link-header">
+                                {artist.name} <FaExternalLinkAlt className="inline-block text-gray-400 text-sm" />
+                            </Link>
+                        ) : (
+                            artist.name
+                        )
+                    }
+                </h1><span className="text-gray-400 px-2 text-3xl font-bold m-0">#{artist.position}</span>
             </div>
             <table>
                 <tbody>

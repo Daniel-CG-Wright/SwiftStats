@@ -1,9 +1,7 @@
 // components/FileUploadComponent.tsx
 
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { dateFormat } from '@/util/dateTimeFormat';
-import { JSONSong, Site } from '@/types';
-import { getFileSite } from '@/util/analysisHelpers';
+
 
 interface Props {
     fileContent: string;
@@ -32,7 +30,8 @@ const FileUploadComponent: React.FC<Props> = ({ fileContent, setFileContent }) =
             setFileContent(savedFileContent);
             setIsSaved(true);
             // set the latest streamed track
-            const parsedContent = JSON.parse(savedFileContent);        }
+            const parsedContent = JSON.parse(savedFileContent);        
+        }
     }, []);
 
 
