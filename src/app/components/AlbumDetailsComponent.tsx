@@ -6,6 +6,7 @@ import DetailedInfoComponent from './DetailedInfoComponent';
 import { getAPIData } from '@/util/apiHelpers';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface AlbumDetailsComponentProps {
     fileData: FileData;
@@ -63,30 +64,43 @@ const AlbumDetailsComponent: React.FC<AlbumDetailsComponentProps> = ({ fileData,
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { artist: album.artist.name, albumName: album.name }, startDate, endDate);
 
     let albumUrl = apiData?.spotifyUrl;
+    let imageUrl = apiData?.imageUrl;
 
     return (
         <div className="px-4">
             <button ref={albumNameRef} onClick={handleBackClick} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
                 <img src="/backarrow.png" alt="Back" className='back-arrow'/>
             </button>
-            <div className="flex items-center">
-                <h1>
-                    {
-                        albumUrl ?
-                            (
-                                <Link href={albumUrl} className='link-header'>
-                                    {album.name} <FaExternalLinkAlt className='inline-block text-gray-400 text-sm' />
-                                </Link>
-                            )
-                            :
-                            album.name
-                    }
-                </h1>
-                <span className="text-gray-400 px-2 text-3xl font-bold m-0">#{album.position}</span>
+            <div className="flex flex-col md:pb-8">
+                {
+                    imageUrl &&
+                    (
+                        <div className="w-full md:w-64 h-64 md:pb-5">
+                            <img src={imageUrl} alt={album.name} className="object-cover w-full h-full" />
+                        </div>
+                    )
+                }
+                <div>
+                    <h1>
+                        {
+                            albumUrl ?
+                                (
+                                    <Link href={albumUrl} className='link-header'>
+                                        {album.name} <FaExternalLinkAlt className='inline-block text-gray-400 text-sm' />
+                                    </Link>
+                                )
+                                :
+                                album.name
+                        }
+                        <span className="text-gray-400 px-2 text-3xl font-bold m-0">#{album.position}</span>
+                    </h1>
+                    
+                    <div className="flex items-center">
+                        <h2>{album.artist.name}</h2><span className="text-gray-400 px-2 text-2xl font-bold m-0">#{album.artist.position}</span>
+                    </div>
+                </div>
             </div>
-            <div className="flex items-center">
-                <h2>{album.artist.name}</h2><span className="text-gray-400 px-2 text-2xl font-bold m-0">#{album.artist.position}</span>
-            </div>
+            
             
             <table>
                 <tbody>
