@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APIData, SongAPIData, QuantityCriteria, Categories } from '../types';
+import { APIData, SongAPIData, QuantityCriteria, Categories, ProfileAPIData } from '../types';
 
 let bearerToken: string;
 
@@ -77,6 +77,46 @@ export const getAPIData = async (criteria: QuantityCriteria, type: Categories): 
         return dataToReturn;
     }
 
+}
+
+/**
+ * This function gets profile API data from Spotify's API.
+ * @param {string} username - The username to get the profile data for.
+ * @returns {Promise<ProfileAPIData>} The profile API data for the user.
+ */
+export const getProfileAPIData = async (username: string): Promise<ProfileAPIData> => {
+    if (!bearerToken)
+    {
+        await getBearerToken();
+    }
+    let response;
+    try {
+        response = await axios.get(`https://api.spotify.com/v1/users/${username}`, {
+            headers: {
+                'Authorization': `Bearer ${bearerToken}`
+            }
+        });
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            await getBearerToken(); // Get a new bearer token
+            response = await axios.get(`https://api.spotify.com/v1/users/${username}`, {
+                headers: {
+                    'Authorization': `Bearer ${bearerToken}`
+                }
+            });
+        } else {
+            throw error; // Re-throw the error if it's not an unauthorized error
+        }
+    }
+    const data = response.data;
+    const imageUrl = data.images.length > 0 ? data.images[0].url : "";
+    const profileData: ProfileAPIData = {
+        imageUrl: imageUrl,
+        spotifyUrl: data.external_urls.spotify,
+        displayName: data.display_name,
+        followers: data.followers.total
+    };
+    return profileData;
 }
 
 /**

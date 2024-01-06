@@ -1,10 +1,11 @@
 // src\app\stats\components\ProfileStatsComponent.tsx
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileData, ProfileAPIData } from '@/types';
 import { getDetailedData, getListeningTimeByMonth } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
+import { getProfileAPIData } from '@/util/apiHelpers';
 
 interface ProfileStatsComponentProps {
     fileData: FileData;
@@ -14,7 +15,19 @@ interface ProfileStatsComponentProps {
 
 const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData, startDate, endDate }) => {
 
-    const [profileAPIData, setProfileAPIData] = React.useState<any>(null);
+    const [profileAPIData, setProfileAPIData] = React.useState<ProfileAPIData | null>(null);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            if (!fileData.username) {
+                return;
+            }
+            const data = await getProfileAPIData(fileData.username);
+            setProfileAPIData(data);
+        };
+
+        fetchData();
+    }, [fileData.username]);
 
     const data = fileData.data;
     
@@ -29,9 +42,21 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData,
     const uniqueArtists = new Set(filteredData.map(record => record.artistName)).size;
     const uniqueTracks = new Set(filteredData.map(record => record.trackName)).size;
 
+    const imageUrl = profileAPIData?.imageUrl;
+    // add code for image url etc (see details components)
+
     return (
         <div className="py-2 px-4 h-full w-full flex flex-grow flex-col">
+            {
+
+            }
             <h1>Profile Stats</h1>
+            {
+                profileAPIData &&
+                (
+                    <h2>{profileAPIData.displayName}</h2>
+                )
+            }
             <table>
                 <tbody>
                     <tr><td>Unique Artists</td><td>{uniqueArtists}</td></tr>
