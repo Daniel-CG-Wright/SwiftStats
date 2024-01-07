@@ -1,8 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import { Song, FileData, Site } from '@/types';
+import React, { useRef, useEffect, useState } from 'react';
+import { Song, FileData, Site, SongAPIData, Categories } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getListeningTimeByMonth, getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
+import { getAPIData } from '@/util/apiHelpers';
+import Link from 'next/link';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 interface SongDetailsComponentProps {
     fileData: FileData;
@@ -23,15 +26,20 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileData, s
     // in the same format as the profile stats page.
     // TODO have an arrow left for the back button
     const songNameRef = useRef<HTMLButtonElement>(null);
+    const [apiData, setApiData] = useState<SongAPIData | null>(null);
 
     useEffect(() => {
-            if (songNameRef.current) {
-                window.scrollTo({
-                    top: songNameRef.current.offsetTop - 60,
-                });
-            }
-        
+        if (songNameRef.current) {
+            window.scrollTo({
+                top: songNameRef.current.offsetTop - 60,
+            });
+        }
     }, []);
+
+    useEffect(() => {
+        getAPIData({ trackName: song.name, artist: song.artist.name }, Categories.TRACK).then(setApiData);
+    }, [song.name, song.artist.name]);
+
 
     const handleBackClick = () => {
         // Get the index of the clicked song row
@@ -55,17 +63,68 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileData, s
 
     const { timeListened, timesStreamed, averageTimeListenedPerStream, averages } = getDetailedData(fileData, { trackName: song.name, artist: song.artist.name }, startDate, endDate);
 
+    let songUrl: string | undefined = apiData?.spotifyUrl;
+    if (fileData.site === Site.YOUTUBE && song.songUrl) {
+        console.log(song.songUrl);
+        songUrl = song.songUrl;
+    }
+
+    let imageUrl = apiData?.imageUrl;
+    let imageComponent = (
+        <img src={imageUrl} alt={song.name} className="object-cover w-full h-full" />
+    )
+
     return (
         <div className="px-4">
             <button ref={songNameRef} onClick={handleBackClick} style={{ border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} className="py-6">
                 <img src="/backarrow.png" alt="Back" className='back-arrow'/>
             </button>
-            <div className="flex items-center">
-                <h1>{song.name}</h1><span className="text-gray-400 px-2 text-3xl font-bold m-0">#{song.position}</span>
-            </div>
+            <div className="flex flex-col md:pb-8">
+            {
+                imageUrl &&
+                (
+                    <div className="w-full md:w-64 h-64 md:mb-5">
+                        {
+                            songUrl ?
+                            (
+                                <Link href={songUrl} className='link-header'>
+                                    {imageComponent}
+                                </Link>
+                            ) :
+                            (
+                                imageComponent
+                            )
+                        }
+                    </div>
+                )
+            }
+            <h1>
+                {
+                    songUrl ?
+                        (
+                            <Link href={songUrl} className='link-header'>
+                                {song.name} <FaExternalLinkAlt className='inline-block text-gray-400 text-sm' />
+                            </Link>
+                        ) :
+                        song.name
+                }
+                <span className="text-gray-400 px-2 text-3xl font-bold m-0">#{song.position}</span>
+            </h1>
+            
+                {
+                    song.album?.name &&
+                    (
+                        <div className="flex items-center pb-2">
+                            <h2 className="text-2xl">{song.album.name}</h2>
+                            <span className="text-gray-400 px-2 text-xl font-bold m-0">#{song.album.position}</span>
+                        </div>
+                    )
+                }
             <div className="flex items-center">
                 <h2>{song.artist.name}</h2><span className="text-gray-400 px-2 text-2xl font-bold m-0">#{song.artist.position}</span>
             </div>
+        </div>
+        
             
             <table>
                 <tbody>

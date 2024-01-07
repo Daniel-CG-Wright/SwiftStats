@@ -39,7 +39,7 @@ const DetailedInfoComponent: React.FC<DetailedInfoComponentProps> = ({ site, tim
                     }
                 </div>
             </div>
-            { site !== Site.YOUTUBE && <tr><td>Minutes Listened</td><td>{timeFormat(averages[selectedAveragePeriod as keyof AverageListeningData].minutesListened)} ({(averages[selectedAveragePeriod as keyof AverageListeningData].minutesListened).toFixed(1)} minutes)</td></tr> }
+            { site !== Site.YOUTUBE && <tr><td>Time Listened</td><td>{timeFormat(averages[selectedAveragePeriod as keyof AverageListeningData].minutesListened)} ({(averages[selectedAveragePeriod as keyof AverageListeningData].minutesListened).toFixed(1)} minutes)</td></tr> }
             <tr><td>Times Streamed</td><td>{(averages[selectedAveragePeriod as keyof AverageListeningData].timesStreamed).toFixed(1)}</td></tr>
         </>
     );

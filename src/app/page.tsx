@@ -120,7 +120,7 @@ const IndexPage = () => {
                             }
                             <div className="py-2">
                                 <p>Site: {fileData.site}</p>
-                                <p>Number of songs: {fileData.data.length}</p>
+                                <p>Number of listening records: {fileData.data.length}</p>
                                 <p>First date: {fileData.firstDate}</p>
                                 <p>Last date: {fileData.lastDate}</p>
                             </div>
