@@ -3,7 +3,6 @@ import { Artist, FileData, APIData, Categories, Site } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
-import { getAPIData } from '@/util/apiHelpers';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import Link from 'next/link';
 
@@ -27,10 +26,20 @@ const ArtistDetailsComponent: React.FC<ArtistDetailsComponentProps> = ({ fileDat
     useEffect(() => {
         // Fetch API data when component mounts
         const fetchData = async () => {
-            const data = await getAPIData({ artist: artist.name }, Categories.ARTIST);
-            setApiData(data);
-            
-        };
+            // getAPIData({ artist: artist.name }, Categories.ARTIST).then(setApiData);
+            const response = await fetch(`/spotifyData`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    criteria: artist.name,
+                    type: Categories.ARTIST
+                })
+            });
+            const spotifyData = await response.json();
+            setApiData(spotifyData);
+        }
 
         fetchData();
     }, [artist.name]);
