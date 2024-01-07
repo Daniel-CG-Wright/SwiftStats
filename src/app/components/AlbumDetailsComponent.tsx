@@ -3,10 +3,8 @@ import { Album, FileData, Site, Categories, APIData } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
-import { getAPIData } from '@/util/apiHelpers';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import Image from 'next/image';
 
 interface AlbumDetailsComponentProps {
     fileData: FileData;
@@ -38,7 +36,23 @@ const AlbumDetailsComponent: React.FC<AlbumDetailsComponentProps> = ({ fileData,
     }, []);
 
     useEffect(() => {
-        getAPIData({ artist: album.artist.name, albumName: album.name }, Categories.ALBUM).then(setApiData);
+        const fetchData = async () => {
+            // getAPIData({ artist: album.artist.name, albumName: album.name }, Categories.ALBUM).then(setApiData);
+            const response = await fetch(`/spotifyData`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    criteria: `${album.artist.name} ${album.name}`,
+                    type: Categories.ALBUM
+                })
+            });
+            const spotifyData = await response.json();
+            setApiData(spotifyData);
+        }
+
+        fetchData();
     }, [album.name]);
 
     const handleBackClick = () => {

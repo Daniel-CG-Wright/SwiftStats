@@ -5,7 +5,6 @@ import { FileData, ProfileAPIData } from '@/types';
 import { getDetailedData, getListeningTimeByMonth } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
-import { getProfileAPIData } from '@/util/apiHelpers';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
@@ -25,7 +24,10 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData,
             if (!fileData.username) {
                 return;
             }
-            const data = await getProfileAPIData(fileData.username);
+            const data = await fetch(`/profileData?username=${fileData.username}`).then(res => res.json());
+            if (data.error) {
+                return;
+            }
             setProfileAPIData(data);
         };
 

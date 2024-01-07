@@ -3,7 +3,6 @@ import { Song, FileData, Site, SongAPIData, Categories } from '@/types';
 import ListeningClockWrapperComponent from './ListeningClockWrapperComponent';
 import { getListeningTimeByMonth, getDetailedData } from '@/util/analysisHelpers';
 import DetailedInfoComponent from './DetailedInfoComponent';
-import { getAPIData } from '@/util/apiHelpers';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
@@ -37,7 +36,23 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileData, s
     }, []);
 
     useEffect(() => {
-        getAPIData({ trackName: song.name, artist: song.artist.name }, Categories.TRACK).then(setApiData);
+        const fetchData = async () => {
+            // getAPIData({ artist: song.artist.name, trackName: song.name }, Categories.SONG).then(setApiData);
+            const response = await fetch(`/spotifyData`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    criteria: `${song.artist.name} ${song.name}`,
+                    type: Categories.TRACK
+                })
+            });
+            const spotifyData = await response.json();
+            setApiData(spotifyData);
+        }
+
+        fetchData();
     }, [song.name, song.artist.name]);
 
 
@@ -65,7 +80,6 @@ const SongDetailsComponent: React.FC<SongDetailsComponentProps> = ({ fileData, s
 
     let songUrl: string | undefined = apiData?.spotifyUrl;
     if (fileData.site === Site.YOUTUBE && song.songUrl) {
-        console.log(song.songUrl);
         songUrl = song.songUrl;
     }
 
