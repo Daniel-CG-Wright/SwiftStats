@@ -114,7 +114,7 @@ export const getFileData = (fileContent: string, cutoffTime: number): FileData =
     let username: string | undefined = undefined;
     if (site === Site.SPOTIFY_EXTENDED)
     {
-        username = parsedContent[-1].username;
+        username = parsedContent[parsedContent.length - 1].username;
     }
 
     return { site, data, lastDate, firstDate, username };
