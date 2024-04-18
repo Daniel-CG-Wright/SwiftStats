@@ -30,6 +30,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: scroll, fixed;
+  width: 100%;
   margin-top: var(--menu-bar-height);
 }
 
