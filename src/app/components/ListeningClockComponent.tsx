@@ -23,7 +23,6 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ data,
     
     useEffect(() => {
         if (data.length === 0) return;
-        console.log(data);
         // Remove previous chart
         d3.select(ref.current).selectAll('*').remove();
 

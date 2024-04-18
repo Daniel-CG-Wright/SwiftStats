@@ -22,10 +22,12 @@ const ProfileStatsComponent: React.FC<ProfileStatsComponentProps> = ({ fileData,
     React.useEffect(() => {
         const fetchData = async () => {
             if (!fileData.username) {
+                setProfileAPIData(null);
                 return;
             }
             const data = await fetch(`/profileData?username=${fileData.username}`).then(res => res.json());
             if (data.error) {
+                setProfileAPIData(null);
                 return;
             }
             setProfileAPIData(data);
