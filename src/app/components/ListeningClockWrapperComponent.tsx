@@ -17,6 +17,7 @@ const ListeningClockWrapperComponent: React.FC<ListeningClockWrapperComponentPro
     .from({ length: Number(fileData.lastDate.split('-')[0]) - Number(fileData.firstDate.split('-')[0]) + 1 }, (_, i) => i + Number(fileData.firstDate.split('-')[0]))
     .filter(year => {
         const dataForYear = getListeningTimeByMonth(fileData, criteria, year.toString());
+        console.log(dataForYear);
         return dataForYear.some(monthData => (fileData.site === Site.YOUTUBE || monthData.minutesListened !== 0) && monthData.timesStreamed !== 0);
     })
     .reverse();

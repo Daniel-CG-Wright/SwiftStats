@@ -343,15 +343,19 @@ export const getListeningTimeByMonth = (fileData: FileData, criteria: QuantityCr
         }
     });
 
+
     const dataPerMonthArray = Array.from(dataPerMonth).map(([key, value]) => ({
         month: key,
         minutesListened: value.minutesListened,
         timesStreamed: value.timesStreamed,
     }));
 
+
+
     // for months with no listening time, add 0
     for (let i = 1; i <= 12; i++) {
-        if (!dataPerMonthArray.some((record: ListeningDataByMonth) => record.month === i.toString())) {
+        // ensure padding of 0 for months less than 10, as that is the format of the key
+        if (!dataPerMonthArray.some((record: ListeningDataByMonth) => record.month === i.toString().padStart(2, '0'))) {
             dataPerMonthArray.push({ month: i.toString(), minutesListened: 0, timesStreamed: 0 });
         }
     }
