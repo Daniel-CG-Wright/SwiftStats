@@ -133,9 +133,9 @@ const ListeningClockComponent: React.FC<ListeningClockComponentProps> = ({ data,
     }, []);
 
     return (
-        <div>
+        <div className="max-w-full w-fit-content">
             <h2 className="justify-center">{label}</h2>
-            <div className="flex justify-center h-full w-full flex-grow">
+            <div className="justify-center h-full w-fit-content">
                 
                 <div id="tooltip" className="tooltip"></div>
                 <svg ref={ref} width={width} height={height} />
